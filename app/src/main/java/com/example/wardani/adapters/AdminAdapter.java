@@ -48,8 +48,7 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView namaSenimanTextView, hargaSenimanTextView, namaTextView, jalanTextView,
-                kotaTextView, provinsiTextView, kodeposTextView, teleponTextView,
+        private TextView namaSenimanTextView, hargaSenimanTextView, namaTextView,
                 tanggalTextView, waktuTextView, detailTextView, hargaTextView;
         private Button batalkanButton;
 
@@ -69,11 +68,6 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ViewHolder> 
             namaSenimanTextView.setText(adminModel.getNamaSeniman());
             hargaSenimanTextView.setText(adminModel.getHargaSeniman());
             namaTextView.setText(adminModel.getNama());
-            jalanTextView.setText(adminModel.getJalan());
-            kotaTextView.setText(adminModel.getKota());
-            provinsiTextView.setText(adminModel.getProvinsi());
-            kodeposTextView.setText(adminModel.getKodepos());
-            teleponTextView.setText(adminModel.getTelepon());
             tanggalTextView.setText(adminModel.getTanggal());
             waktuTextView.setText(adminModel.getStartTime() + " - " + adminModel.getEndTime());
             detailTextView.setText(adminModel.getNama() + ", " + adminModel.getJalan() + ", " +
@@ -81,10 +75,6 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ViewHolder> 
             hargaTextView.setText(adminModel.getHargaSeniman());
 
             batalkanButton.setOnClickListener(v -> {
-                // Handle action when the "Batalkan" button is clicked
-                // You can implement cancellation logic here
-                // For example:
-                // showCancelConfirmationDialog(adminModel.getDocumentId());
             });
         }
     }
