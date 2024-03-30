@@ -31,6 +31,7 @@ import java.util.List;
 
 public class AdminActivity extends AppCompatActivity {
 
+    private Toolbar toolbar;
     private RecyclerView recyclerView;
     private AdminAdapter adminAdapter;
     private List<AdminModel> adminModelList;
@@ -43,6 +44,17 @@ public class AdminActivity extends AppCompatActivity {
 
         // Inisialisasi Firestore
         firestore = FirebaseFirestore.getInstance();
+
+        // Toolbar
+        toolbar = findViewById(R.id.admin_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         // Inisialisasi RecyclerView
         recyclerView = findViewById(R.id.admin_rec);
