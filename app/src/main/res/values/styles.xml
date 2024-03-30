@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="DatePickerTheme" parent="ThemeOverlay.AppCompat.Dialog">
+        <item name="colorAccent">@color/background</item>
+        <item name="android:textColorPrimary">@color/black</item>
+    </style>
+
+    <style name="TimePickerTheme" parent="ThemeOverlay.AppCompat.Dialog">
+        <item name="colorAccent">@color/background</item>
+        <item name="android:textColorPrimary">@color/black</item>
+    </style>
+</resources>

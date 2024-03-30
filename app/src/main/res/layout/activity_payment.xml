@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/payment_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        android:theme="?attr/actionBarTheme"
+        app:title="Pembayaran"
+        app:titleTextColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/payment_nama"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ki Warseno Slank"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/payment_toolbar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/text_tgl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hari, Tanggal Pelaksanaan: "
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/payment_nama"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/payment_tanggal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sabtu, 16 Maret 2024"
+        android:textSize="16sp"
+        android:textColor="@color/background"
+        android:textStyle="bold"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@id/payment_nama"
+        android:layout_toRightOf="@id/text_tgl"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/text_harga"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Harga: "
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/payment_detail"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/text_waktu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Acara Mulai: "
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/payment_tanggal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/payment_waktu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@color/background"
+        android:textStyle="bold"
+        android:text="00.00"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@id/payment_tanggal"
+        android:layout_toRightOf="@id/text_harga" />
+
+<!--    <TextView-->
+<!--        android:id="@+id/penghubung"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:textSize="16sp"-->
+<!--        android:textColor="@color/background"-->
+<!--        android:textStyle="bold"-->
+<!--        android:text="-"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginLeft="5dp"-->
+<!--        android:layout_below="@id/payment_tanggal"-->
+<!--        android:layout_toRightOf="@id/payment_waktu_mulai"-->
+<!--        android:layout_marginStart="5dp" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/payment_waktu_selesai"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:textSize="16sp"-->
+<!--        android:textColor="@color/background"-->
+<!--        android:textStyle="bold"-->
+<!--        android:text="03.00"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginLeft="5dp"-->
+<!--        android:layout_below="@id/payment_tanggal"-->
+<!--        android:layout_toRightOf="@id/penghubung"-->
+<!--        android:layout_marginStart="5dp" />-->
+
+    <TextView
+        android:id="@+id/payment_harga"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@color/background"
+        android:textStyle="bold"
+        android:text="15.000.000"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@id/payment_detail"
+        android:layout_toRightOf="@id/text_harga" />
+
+    <TextView
+        android:id="@+id/text_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Detail Order: "
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/payment_waktu"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/payment_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@color/background"
+        android:textStyle="bold"
+        android:text="Muhammad Eko Ramayantyas S, Kabongan Kidul RT 4/RW 1, Rembang, 59671, 081215409800."
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@id/payment_waktu"
+        android:layout_toRightOf="@id/text_harga" />
+
+    <Button
+        android:id="@+id/btnBayar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bayar Sekarang"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:background="@drawable/rounded_button_primary"
+        android:layout_below="@id/payment_harga"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
+
+</RelativeLayout>

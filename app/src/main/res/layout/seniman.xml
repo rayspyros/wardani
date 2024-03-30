@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="150dp"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="5dp"
+    android:padding="5dp"
+    android:layout_margin="5dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/new_img"
+            android:layout_width="100dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="5dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/kiwarsenoslank"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/nama_seniman"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ki Warseno Slank"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorButton"
+            app:layout_constraintEnd_toEndOf="@+id/new_img"
+            app:layout_constraintStart_toStartOf="@id/new_img"
+            app:layout_constraintTop_toBottomOf="@+id/new_img"/>
+
+        <TextView
+            android:id="@+id/textHarga"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Harga Pemesanan"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="@+id/nama_seniman"
+            app:layout_constraintStart_toStartOf="@id/nama_seniman"
+            app:layout_constraintTop_toBottomOf="@+id/nama_seniman"/>
+        
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@+id/textHarga"
+            app:layout_constraintStart_toStartOf="@+id/textHarga"
+            app:layout_constraintTop_toBottomOf="@+id/textHarga">
+
+            <TextView
+                android:id="@+id/rupiah"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintHorizontal_bias="0"
+                android:text="Rp. "
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/harga"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="15000000"
+                android:textColor="@color/background"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/rupiah"
+                app:layout_constraintStart_toEndOf="@id/rupiah"
+                app:layout_constraintTop_toTopOf="@id/rupiah"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
