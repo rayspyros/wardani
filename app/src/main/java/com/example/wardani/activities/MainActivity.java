@@ -76,10 +76,9 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, HistoryActivity.class));
         } else if (id == R.id.menu_hubungi_kami) {
             startActivity(new Intent(MainActivity.this, ContactUsActivity.class));
+        } else if (id == R.id.menu_admin) {
+            startActivity(new Intent(MainActivity.this, AdminActivity.class));
         }
-//        else if (id == R.id.menu_admin) {
-//            startActivity(new Intent(MainActivity.this, AdminActivity.class));
-//        }
         return true;
     }
 

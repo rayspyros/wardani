@@ -1,0 +1,39 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Contoh input untuk gambar, nama seniman, harga jasa, dan deskripsi -->
+    <EditText
+        android:id="@+id/editTextImageURL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Image URL" />
+
+    <EditText
+        android:id="@+id/editTextNamaSeniman"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nama Seniman" />
+
+    <EditText
+        android:id="@+id/editTextHargaJasa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Harga Jasa" />
+
+    <EditText
+        android:id="@+id/editTextDeskripsi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Deskripsi" />
+
+    <Button
+        android:id="@+id/buttonTambahSeniman"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/background"
+        android:text="Tambah"/>
+
+</LinearLayout>
