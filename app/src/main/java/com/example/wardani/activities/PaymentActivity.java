@@ -5,11 +5,13 @@ import static com.example.wardani.BuildConfig.CLIENT_KEY;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.wardani.R;
 import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback;
@@ -28,16 +30,28 @@ import com.midtrans.sdk.uikit.SdkUIFlowBuilder;
 import java.util.ArrayList;
 
 public class PaymentActivity extends AppCompatActivity implements TransactionFinishedCallback {
-    private TextView textViewNama, textViewTanggal, textViewWaktu, textViewDetail, textViewHarga;
+    private TextView textViewNama, textViewCustomer, textViewTanggal, textViewWaktu, textViewDetail, textViewHarga;
     private Button btnPayment;
 
-    private String name, address, id_item;
+    private String name, customer, address, id_item;
     private Double price;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
+
+        Toolbar toolbar;
+        toolbar = findViewById(R.id.payment_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         iniBindViews();
 
@@ -46,18 +60,21 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
         if (intent != null) {
             String id = intent.getStringExtra("ID");
             String nama = intent.getStringExtra("NAMA");
+            String pemesan = intent.getStringExtra("CUSTOMER");
             String tanggal = intent.getStringExtra("TANGGAL");
             String waktu = intent.getStringExtra("WAKTU");
             String detail = intent.getStringExtra("DETAIL");
             String harga = intent.getStringExtra("HARGA");
 
             name = nama;
+            customer = pemesan;
             address = detail;
             id_item = id;
             price = Double.valueOf(harga);
 
             // Set data ke TextView
             textViewNama.setText(nama);
+            textViewCustomer.setText(customer);
             textViewTanggal.setText(tanggal);
             textViewWaktu.setText(waktu);
             textViewDetail.setText(detail);
@@ -71,12 +88,14 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
     private void iniBindViews(){
         // Inisialisasi TextView untuk menampilkan data
         textViewNama = findViewById(R.id.payment_nama);
+        textViewCustomer= findViewById(R.id.payment_customer);
         textViewTanggal = findViewById(R.id.payment_tanggal);
         textViewWaktu = findViewById(R.id.payment_waktu);
         textViewDetail = findViewById(R.id.payment_detail);
         textViewHarga = findViewById(R.id.payment_harga);
         btnPayment = findViewById(R.id.btnBayar);
     }
+
 
     private TransactionRequest initTransactionRequest() {
         // Create new Transaction Request
@@ -98,7 +117,7 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
     private CustomerDetails initCustomerDetails() {
         //define customer detail (mandatory for coreflow)
         CustomerDetails mCustomerDetails = new CustomerDetails();
-        mCustomerDetails.setFirstName(name);
+        mCustomerDetails.setFirstName(customer);
         mCustomerDetails.setShippingAddress(shippingAddress());
         return mCustomerDetails;
     }

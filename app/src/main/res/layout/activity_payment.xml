@@ -27,6 +27,31 @@
         android:layout_marginTop="8dp"/>
 
     <TextView
+        android:id="@+id/text_customer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nama Pemesan: "
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/payment_nama"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/payment_customer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Muhammad Eko Ramayantyas S"
+        android:textSize="16sp"
+        android:textColor="@color/background"
+        android:textStyle="bold"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@id/payment_nama"
+        android:layout_toRightOf="@id/text_customer"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
         android:id="@+id/text_tgl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,9 +59,9 @@
         android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"
-        android:layout_below="@id/payment_nama"
+        android:layout_below="@id/payment_customer"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="16dp"/>
 
     <TextView
         android:id="@+id/payment_tanggal"
@@ -47,9 +72,9 @@
         android:textColor="@color/background"
         android:textStyle="bold"
         android:layout_marginLeft="5dp"
-        android:layout_below="@id/payment_nama"
+        android:layout_below="@id/payment_customer"
         android:layout_toRightOf="@id/text_tgl"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="16dp"/>
 
     <TextView
         android:id="@+id/text_harga"
@@ -148,7 +173,7 @@
         android:textSize="16sp"
         android:textColor="@color/background"
         android:textStyle="bold"
-        android:text="Muhammad Eko Ramayantyas S, Kabongan Kidul RT 4/RW 1, Rembang, 59671, 081215409800."
+        android:text="Kabongan Kidul RT 4/RW 1, Rembang, 59671, 081215409800."
         android:layout_marginTop="16dp"
         android:layout_marginLeft="5dp"
         android:layout_below="@id/payment_waktu"
