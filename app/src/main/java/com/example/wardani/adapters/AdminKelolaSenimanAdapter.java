@@ -1,6 +1,7 @@
 package com.example.wardani.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
@@ -66,24 +67,19 @@ public class AdminKelolaSenimanAdapter extends RecyclerView.Adapter<AdminKelolaS
             }
         });
 
+        // Set onClickListener untuk tombol delete
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Panggil method untuk menghapus data dari Firestore
-                hapusDataDariFirestore(item.getNama_dalang());
+                tampilkanKonfirmasiHapus(item);
             }
         });
 
+        // Set listener untuk switch
         holder.aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                // Simpan status switch ke SharedPreferences
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean(item.getId(), isChecked);
-                editor.apply();
-
-                // Update status switch di Firestore
-                updateDataDiFirestore(item, isChecked);
+                tampilkanKonfirmasiSwitch(item, isChecked);
             }
         });
     }
@@ -129,15 +125,8 @@ public class AdminKelolaSenimanAdapter extends RecyclerView.Adapter<AdminKelolaS
         btnSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Perbarui data ke Firestore setelah diedit
-                String img_url = pp2UrlGambar.getText().toString();
-                String nama_dalang = pp2NamaSeniman.getText().toString();
-                int harga_jasa = Integer.parseInt(pp2HargaSeniman.getText().toString());
-                String deskripsi = pp2Deskripsi.getText().toString();
-
-                // Memperbarui data menggunakan ID dokumen yang sesuai
-                perbaruiDataDiFirestore(item.getId(), img_url, nama_dalang, harga_jasa, deskripsi);
-                dialog.dismiss();
+                tampilkanKonfirmasiSimpan(item, dialog, pp2UrlGambar.getText().toString(), pp2NamaSeniman.getText().toString(),
+                        Integer.parseInt(pp2HargaSeniman.getText().toString()), pp2Deskripsi.getText().toString());
             }
         });
     }
@@ -210,6 +199,55 @@ public class AdminKelolaSenimanAdapter extends RecyclerView.Adapter<AdminKelolaS
                         Toast.makeText(context, "Gagal mengakses data", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void tampilkanKonfirmasiHapus(AdminKelolaSenimanModel item) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Konfirmasi");
+        builder.setMessage("Apakah Anda yakin ingin menghapus data seniman ini?");
+        builder.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // Panggil method hapusDataDariFirestore untuk menghapus data dari Firestore
+                hapusDataDariFirestore(item.getNama_dalang());
+            }
+        });
+        builder.setNegativeButton("Tidak", null);
+        builder.show();
+    }
+
+    private void tampilkanKonfirmasiSwitch(AdminKelolaSenimanModel item, boolean isChecked) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        String message = isChecked ? "Apakah Anda ingin menampilkan seniman ini?" : "Apakah Anda ingin menyembunyikan seniman ini?";
+        builder.setMessage(message);
+        builder.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // Simpan status switch ke SharedPreferences dan update di Firestore
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(item.getId(), isChecked);
+                editor.apply();
+                updateDataDiFirestore(item, isChecked);
+            }
+        });
+        builder.setNegativeButton("Tidak", null);
+        builder.show();
+    }
+
+    private void tampilkanKonfirmasiSimpan(AdminKelolaSenimanModel item, AlertDialog dialog, String img_url, String nama_dalang, int harga_jasa, String deskripsi) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Konfirmasi");
+        builder.setMessage("Apakah Anda yakin ingin menyimpan perubahan?");
+        builder.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // Perbarui data ke Firestore setelah diedit
+                perbaruiDataDiFirestore(item.getId(), img_url, nama_dalang, harga_jasa, deskripsi);
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("Tidak", null);
+        builder.show();
     }
 
     @Override

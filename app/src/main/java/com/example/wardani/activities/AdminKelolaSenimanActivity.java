@@ -2,7 +2,9 @@ package com.example.wardani.activities;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -111,15 +113,41 @@ public class AdminKelolaSenimanActivity extends AppCompatActivity {
                 // Ambil data dari EditText
                 String img_url = ppUrlGambar.getText().toString();
                 String nama_dalang = ppNamaSeniman.getText().toString();
-                int harga_jasa = Integer.parseInt(ppHargaSeniman.getText().toString());
+                String harga_jasa_str = ppHargaSeniman.getText().toString();
                 String deskripsi = ppDeskripsi.getText().toString();
 
-                // Tambahkan data ke Firestore
-                tambahkanDataKeFirestore(img_url, nama_dalang, harga_jasa, deskripsi);
+                // Cek apakah semua field telah diisi
+                if (TextUtils.isEmpty(img_url) || TextUtils.isEmpty(nama_dalang) || TextUtils.isEmpty(harga_jasa_str) || TextUtils.isEmpty(deskripsi)) {
+                    Toast.makeText(AdminKelolaSenimanActivity.this, "Semua field harus diisi", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Tampilkan dialog konfirmasi sebelum menambahkan data
+                    int harga_jasa = Integer.parseInt(harga_jasa_str);
+                    tampilkanKonfirmasiTambahData(img_url, nama_dalang, harga_jasa, deskripsi, dialog);
+                }
+            }
+        });
+    }
 
+    private void tampilkanKonfirmasiTambahData(String img_url, String nama_dalang, int harga_jasa, String deskripsi, AlertDialog dialog) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Konfirmasi");
+        builder.setMessage("Apakah Anda yakin ingin menambahkan data seniman ini?");
+        builder.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // Tambahkan data ke Firestore setelah pengguna mengonfirmasi
+                tambahkanDataKeFirestore(img_url, nama_dalang, harga_jasa, deskripsi);
                 dialog.dismiss();
             }
         });
+        builder.setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // Batal menambahkan data, jadi hanya keluar dari dialog konfirmasi
+                dialog.dismiss();
+            }
+        });
+        builder.show();
     }
 
     private void tambahkanDataKeFirestore(String img_url, String nama_dalang, int harga_jasa, String deskripsi) {
@@ -173,5 +201,4 @@ public class AdminKelolaSenimanActivity extends AppCompatActivity {
                     }
                 });
     }
-
 }

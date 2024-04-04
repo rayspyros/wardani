@@ -158,7 +158,7 @@ public class OrderActivity extends AppCompatActivity
     private void showConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Konfirmasi");
-        builder.setMessage("Apakah data pemesanan Anda sudah benar?");
+        builder.setMessage("Pastikan untuk mengisi formulir pemesanan dengan benar, termasuk alamat, tanggal, dan waktu acara Anda. Apakah data pemesanan Anda sudah benar?");
         builder.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -175,6 +175,7 @@ public class OrderActivity extends AppCompatActivity
         });
         builder.show();
     }
+
 
     // Method untuk menyimpan data pemesanan ke Firestore
     private void saveOrderToFirestore() {
