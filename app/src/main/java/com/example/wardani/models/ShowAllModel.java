@@ -8,15 +8,17 @@ public class ShowAllModel implements Serializable {
     String nama_dalang;
     String deskripsi;
     int harga_jasa;
+    Boolean tampilkan;
 
     public ShowAllModel() {
     }
 
-    public ShowAllModel(String img_url, String nama_dalang, String deskripsi, int harga_jasa) {
+    public ShowAllModel(String img_url, String nama_dalang, String deskripsi, int harga_jasa, Boolean tampilkan) {
         this.img_url = img_url;
         this.nama_dalang = nama_dalang;
         this.deskripsi = deskripsi;
         this.harga_jasa = harga_jasa;
+        this.tampilkan = tampilkan;
     }
 
     public String getImg_url() {
@@ -49,5 +51,13 @@ public class ShowAllModel implements Serializable {
 
     public void setHarga_jasa(int harga_jasa) {
         this.harga_jasa = harga_jasa;
+    }
+
+    public Boolean getTampilkan() {
+        return tampilkan;
+    }
+
+    public void setTampilkan(Boolean tampilkan) {
+        this.tampilkan = tampilkan;
     }
 }

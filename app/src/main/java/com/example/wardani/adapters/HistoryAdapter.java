@@ -15,9 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.wardani.R;
 import com.example.wardani.activities.PaymentActivity;
 import com.example.wardani.models.HistoryModel;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -53,10 +55,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         holder.detail.setText(historyModel.getJalan() + ", " + historyModel.getKota() + ", " + historyModel.getProvinsi() + ", " + historyModel.getKodepos());
         holder.harga.setText("Rp." + historyModel.getHargaSeniman());
 
-        // Menetapkan tanggal dan waktu pemesanan
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
-        String currentDateTime = dateFormat.format(new Date());
-        holder.order.setText(currentDateTime);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd "+"/"+" HH:mm:ss", Locale.getDefault());
+        Timestamp timestamp = historyModel.getTimeOrder(); // Ambil objek Timestamp dari historyModel
+        Date date = timestamp.toDate(); // Konversi Timestamp ke Date
+        String formattedDate = dateFormat.format(date); // Format tanggal sesuai dengan kebutuhan Anda
+        holder.order.setText(formattedDate); // Set teks ke holder order
 
         holder.cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -30,6 +30,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback;
 import com.midtrans.sdk.corekit.core.MidtransSDK;
@@ -193,12 +194,13 @@ public class OrderActivity extends AppCompatActivity
             orderData.put("tanggal", tanggal.getText().toString());
             orderData.put("startTime", startTimeEditText.getText().toString());
             orderData.put("endTime", endTimeEditText.getText().toString());
+            orderData.put("timeOrder", FieldValue.serverTimestamp());
 
             // Mengatur tanggal real-time
             Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            String currentDate = dateFormat.format(calendar.getTime());
-            orderData.put("tanggal_order", currentDate); // Menggunakan "tanggal_order" untuk membedakan dengan "tanggal"
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
+            String currentDateTime = dateFormat.format(calendar.getTime());
+            orderData.put("tanggal_order", currentDateTime); // Menggunakan "tanggal_order" untuk membedakan dengan "tanggal"
 
             firestore.collection("Pesanan").document(auth.getCurrentUser().getUid())
                     .collection("User").document().set(orderData)

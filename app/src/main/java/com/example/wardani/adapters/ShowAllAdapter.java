@@ -75,7 +75,13 @@ public class ShowAllAdapter extends RecyclerView.Adapter<ShowAllAdapter.ViewHold
     }
 
     public void filterList(List<ShowAllModel> filteredList) {
-        this.filteredList = filteredList;
+        List<ShowAllModel> temp = new ArrayList<>();
+        for (ShowAllModel model : filteredList) {
+            if (model.getTampilkan()) { // Memeriksa nilai "tampilkan" dari setiap item
+                temp.add(model);
+            }
+        }
+        this.filteredList = temp;
         notifyDataSetChanged();
     }
 }

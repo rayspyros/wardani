@@ -36,19 +36,26 @@ public class SenimanAdapter extends RecyclerView.Adapter<SenimanAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        SenimanModel seniman = list.get(position);
+        // Tampilkan hanya jika status switch true
+        if (seniman.getTampilkan()) {
+            Glide.with(context).load(seniman.getImg_url()).into(holder.newImg);
+            holder.newNama.setText(seniman.getNama_dalang());
+            holder.newHarga.setText(String.valueOf(seniman.getHarga_jasa()));
 
-        Glide.with(context).load(list.get(position).getImg_url()).into(holder.newImg);
-        holder.newNama.setText(list.get(position).getNama_dalang());
-        holder.newHarga.setText(String.valueOf(list.get(position).getHarga_jasa()));
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, DetailSenimanActivity.class);
-                intent.putExtra("detail", list.get(position));
-                context.startActivity(intent);
-            }
-        });
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, DetailSenimanActivity.class);
+                    intent.putExtra("detail", seniman);
+                    context.startActivity(intent);
+                }
+            });
+        } else {
+            // Sembunyikan item jika status switch false
+            holder.itemView.setVisibility(View.GONE);
+            holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
+        }
     }
 
     @Override

@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +28,6 @@ import com.example.wardani.models.BeritaModel;
 import com.example.wardani.models.SenimanModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.api.Distribution;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -50,8 +50,9 @@ public class HomeFragment extends Fragment {
     BeritaAdapter beritaAdapter;
     List<BeritaModel> beritaModelList;
 
-    //FireStore
+    //Firestore
     FirebaseFirestore db;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -61,15 +62,23 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View root =  inflater.inflate(R.layout.fragment_home, container, false);
+        View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-        db =  FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         progressDialog = new ProgressDialog(getActivity());
         senimanRecyclerview = root.findViewById(R.id.seniman_rec);
         beritaRecyclerview = root.findViewById(R.id.berita_rec);
-
         senimanShowAll = root.findViewById(R.id.seniman_see_all);
+
+        swipeRefreshLayout = root.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh data
+                fetchData();
+            }
+        });
 
         senimanShowAll.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,37 +107,50 @@ public class HomeFragment extends Fragment {
         progressDialog.show();
 
         //Seniman
-        senimanRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.HORIZONTAL,false));
+        senimanRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
         senimanModelList = new ArrayList<>();
         senimanAdapter = new SenimanAdapter(getContext(), senimanModelList);
         senimanRecyclerview.setAdapter(senimanAdapter);
 
-        db.collection("Seniman")
+        //Berita
+        beritaRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
+        beritaModelList = new ArrayList<>();
+        beritaAdapter = new BeritaAdapter(getContext(), beritaModelList);
+        beritaRecyclerview.setAdapter(beritaAdapter);
+
+        // Fetch data
+        fetchData();
+
+        return root;
+    }
+
+    private void fetchData() {
+        // Clear previous data
+        senimanModelList.clear();
+        beritaModelList.clear();
+
+        // Fetch new data
+        db.collection("ShowAll")
+                .whereEqualTo("tampilkan", true) // Hanya ambil data dengan status switch true
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-
                                 SenimanModel senimanModel = document.toObject(SenimanModel.class);
                                 senimanModelList.add(senimanModel);
-                                senimanAdapter.notifyDataSetChanged();
-                                linearLayout.setVisibility(View.VISIBLE);
-                                progressDialog.dismiss();
-
                             }
+                            senimanAdapter.notifyDataSetChanged();
+                            linearLayout.setVisibility(View.VISIBLE);
+                            progressDialog.dismiss();
                         } else {
-                            Toast.makeText(getActivity(), ""+task.getException(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "" + task.getException(), Toast.LENGTH_SHORT).show();
                         }
+                        // Stop refreshing
+                        swipeRefreshLayout.setRefreshing(false);
                     }
                 });
-
-        //Berita
-        beritaRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.HORIZONTAL,false));
-        beritaModelList = new ArrayList<>();
-        beritaAdapter = new BeritaAdapter(getContext(), beritaModelList);
-        beritaRecyclerview.setAdapter(beritaAdapter);
 
         db.collection("Berita")
                 .get()
@@ -137,20 +159,18 @@ public class HomeFragment extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-
                                 BeritaModel beritaModel = document.toObject(BeritaModel.class);
                                 beritaModelList.add(beritaModel);
-                                beritaAdapter.notifyDataSetChanged();
-                                linearLayout.setVisibility(View.VISIBLE);
-                                progressDialog.dismiss();
-
                             }
+                            beritaAdapter.notifyDataSetChanged();
+                            linearLayout.setVisibility(View.VISIBLE);
+                            progressDialog.dismiss();
                         } else {
-                            Toast.makeText(getActivity(), ""+task.getException(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "" + task.getException(), Toast.LENGTH_SHORT).show();
                         }
+                        // Stop refreshing
+                        swipeRefreshLayout.setRefreshing(false);
                     }
                 });
-
-        return root;
     }
 }

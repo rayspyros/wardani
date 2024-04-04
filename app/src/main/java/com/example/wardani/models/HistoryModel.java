@@ -1,6 +1,6 @@
 package com.example.wardani.models;
 
-import java.io.Serializable;
+import com.google.firebase.Timestamp;
 
 public class HistoryModel {
     String documentId;
@@ -15,11 +15,12 @@ public class HistoryModel {
     private String tanggal;
     private String startTime;
     private String endTime;
+    private Timestamp timeOrder;
 
     public HistoryModel() {
     }
 
-    public HistoryModel(String documentId, String namaSeniman, String hargaSeniman, String nama, String jalan, String kota, String provinsi, String kodepos, String telepon, String tanggal, String startTime, String endTime) {
+    public HistoryModel(String documentId, String namaSeniman, String hargaSeniman, String nama, String jalan, String kota, String provinsi, String kodepos, String telepon, String tanggal, String startTime, String endTime, Timestamp timeOrder) {
         this.documentId = documentId;
         this.namaSeniman = namaSeniman;
         this.hargaSeniman = hargaSeniman;
@@ -32,6 +33,7 @@ public class HistoryModel {
         this.tanggal = tanggal;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.timeOrder = timeOrder;
     }
 
     public String getDocumentId() {
@@ -128,5 +130,13 @@ public class HistoryModel {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public Timestamp getTimeOrder() {
+        return timeOrder;
+    }
+
+    public void setTimeOrder(Timestamp timeOrder) {
+        this.timeOrder = timeOrder;
     }
 }

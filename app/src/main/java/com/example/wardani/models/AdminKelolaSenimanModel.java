@@ -6,16 +6,18 @@ public class AdminKelolaSenimanModel {
     private String nama_dalang;
     private int harga_jasa;
     private String deskripsi;
+    private Boolean tampilkan;
 
     public AdminKelolaSenimanModel() {
     }
 
-    public AdminKelolaSenimanModel(String id, String img_url, String nama_dalang, int harga_jasa, String deskripsi) {
+    public AdminKelolaSenimanModel(String id, String img_url, String nama_dalang, int harga_jasa, String deskripsi, Boolean tampilkan) {
         this.id = id;
         this.img_url = img_url;
         this.nama_dalang = nama_dalang;
         this.harga_jasa = harga_jasa;
         this.deskripsi = deskripsi;
+        this.tampilkan = tampilkan;
     }
 
     public String getId() {
@@ -56,5 +58,13 @@ public class AdminKelolaSenimanModel {
 
     public void setDeskripsi(String deskripsi) {
         this.deskripsi = deskripsi;
+    }
+
+    public Boolean getTampilkan() {
+        return tampilkan;
+    }
+
+    public void setTampilkan(Boolean tampilkan) {
+        this.tampilkan = tampilkan;
     }
 }

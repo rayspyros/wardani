@@ -2,11 +2,14 @@ package com.example.wardani.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,10 +35,12 @@ public class AdminKelolaSenimanAdapter extends RecyclerView.Adapter<AdminKelolaS
 
     private Context context;
     private List<AdminKelolaSenimanModel> adminKelolaSenimanModelList;
+    private SharedPreferences sharedPreferences;
 
     public AdminKelolaSenimanAdapter(Context context, List<AdminKelolaSenimanModel> adminKelolaSenimanModelList) {
         this.context = context;
         this.adminKelolaSenimanModelList = adminKelolaSenimanModelList;
+        this.sharedPreferences = context.getSharedPreferences("SwitchStatus", Context.MODE_PRIVATE);
     }
 
     @NonNull
@@ -49,6 +54,9 @@ public class AdminKelolaSenimanAdapter extends RecyclerView.Adapter<AdminKelolaS
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AdminKelolaSenimanModel item = adminKelolaSenimanModelList.get(position);
         holder.sNama.setText(item.getNama_dalang());
+
+        // Set status switch berdasarkan nilai dari SharedPreferences
+        holder.aSwitch.setChecked(sharedPreferences.getBoolean(item.getId(), false));
 
         // Set onClickListener untuk tombol edit
         holder.btnEdit.setOnClickListener(new View.OnClickListener() {
@@ -65,6 +73,37 @@ public class AdminKelolaSenimanAdapter extends RecyclerView.Adapter<AdminKelolaS
                 hapusDataDariFirestore(item.getNama_dalang());
             }
         });
+
+        holder.aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                // Simpan status switch ke SharedPreferences
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(item.getId(), isChecked);
+                editor.apply();
+
+                // Update status switch di Firestore
+                updateDataDiFirestore(item, isChecked);
+            }
+        });
+    }
+
+    private void updateDataDiFirestore(AdminKelolaSenimanModel item, boolean isChecked) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("ShowAll").document(item.getId())
+                .update("tampilkan", isChecked)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(context, "Data berhasil diperbarui", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, "Gagal memperbarui data", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void tampilkanDialogEdit(AdminKelolaSenimanModel item) {
@@ -131,7 +170,6 @@ public class AdminKelolaSenimanAdapter extends RecyclerView.Adapter<AdminKelolaS
         }
     }
 
-
     private void hapusDataDariFirestore(String namaDalang) {
         // Akses Firestore dan hapus data dengan nama dalang yang sesuai
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -183,12 +221,14 @@ public class AdminKelolaSenimanAdapter extends RecyclerView.Adapter<AdminKelolaS
 
         private TextView sNama;
         private Button btnDelete, btnEdit;
+        private Switch aSwitch;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             sNama = itemView.findViewById(R.id.admin_nama_seniman);
             btnDelete = itemView.findViewById(R.id.admin_btn_delete);
             btnEdit = itemView.findViewById(R.id.admin_btn_edit);
+            aSwitch = itemView.findViewById(R.id.admin_switch);
         }
     }
 }
