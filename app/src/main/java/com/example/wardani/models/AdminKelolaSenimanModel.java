@@ -1,19 +1,29 @@
 package com.example.wardani.models;
 
 public class AdminKelolaSenimanModel {
+    private String id;
     private String img_url;
-    private Integer harga_jasa;
     private String nama_dalang;
+    private int harga_jasa;
     private String deskripsi;
 
     public AdminKelolaSenimanModel() {
     }
 
-    public AdminKelolaSenimanModel(String img_url, Integer harga_jasa, String nama_dalang, String deskripsi) {
+    public AdminKelolaSenimanModel(String id, String img_url, String nama_dalang, int harga_jasa, String deskripsi) {
+        this.id = id;
         this.img_url = img_url;
-        this.harga_jasa = harga_jasa;
         this.nama_dalang = nama_dalang;
+        this.harga_jasa = harga_jasa;
         this.deskripsi = deskripsi;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getImg_url() {
@@ -24,20 +34,20 @@ public class AdminKelolaSenimanModel {
         this.img_url = img_url;
     }
 
-    public Integer getHarga_jasa() {
-        return harga_jasa;
-    }
-
-    public void setHarga_jasa(Integer harga_jasa) {
-        this.harga_jasa = harga_jasa;
-    }
-
     public String getNama_dalang() {
         return nama_dalang;
     }
 
     public void setNama_dalang(String nama_dalang) {
         this.nama_dalang = nama_dalang;
+    }
+
+    public int getHarga_jasa() {
+        return harga_jasa;
+    }
+
+    public void setHarga_jasa(int harga_jasa) {
+        this.harga_jasa = harga_jasa;
     }
 
     public String getDeskripsi() {

@@ -4,42 +4,42 @@
     android:padding="16dp">
 
     <EditText
-        android:id="@+id/pp_url_gambar"
+        android:id="@+id/pp2_url_gambar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="URL Gambar"
         android:inputType="textUri"/>
 
     <EditText
-        android:id="@+id/pp_nama_dalang"
+        android:id="@+id/pp2_nama_dalang"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/pp_url_gambar"
+        android:layout_below="@id/pp2_url_gambar"
         android:hint="Nama Seniman"
         android:inputType="text"/>
 
     <EditText
-        android:id="@+id/pp_harga_jasa"
+        android:id="@+id/pp2_harga_jasa"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/pp_nama_dalang"
+        android:layout_below="@id/pp2_nama_dalang"
         android:hint="Harga Seniman"
         android:inputType="number"/>
 
     <EditText
-        android:id="@+id/pp_deskripsi"
+        android:id="@+id/pp2_deskripsi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/pp_harga_jasa"
+        android:layout_below="@id/pp2_harga_jasa"
         android:hint="Deskripsi Seniman"
         android:inputType="text"/>
 
     <Button
-        android:id="@+id/btn_tambah"
+        android:id="@+id/btn_simpan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/pp_deskripsi"
+        android:layout_below="@id/pp2_deskripsi"
         android:layout_marginTop="16dp"
-        android:text="Tambah"/>
+        android:text="Simpan"/>
 
 </RelativeLayout>
