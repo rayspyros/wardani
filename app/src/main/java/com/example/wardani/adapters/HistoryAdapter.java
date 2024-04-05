@@ -68,27 +68,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         String formattedDate = dateFormat.format(date);
         holder.order.setText(formattedDate);
 
-        if (historyModel.isPaymentConfirmed()) {
-            holder.cancelBtn.setVisibility(View.GONE);
-            holder.adminCancelBtn.setVisibility(View.VISIBLE);
-        } else {
-            holder.cancelBtn.setVisibility(View.VISIBLE);
-            holder.adminCancelBtn.setVisibility(View.GONE);
-        }
+        holder.cancelBtn.setVisibility(historyModel.isPaymentConfirmed() ? View.GONE : View.VISIBLE);
+        holder.adminCancelBtn.setVisibility(historyModel.isPaymentConfirmed() ? View.VISIBLE : View.GONE); // Menyembunyikan adminCancelBtn jika pembayaran sudah dikonfirmasi
 
         holder.cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showCancelConfirmationDialog(position, historyModel.getDocumentId());
-            }
-        });
-
-        holder.adminCancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Replace "your_admin_cancel_link" with your actual admin cancel link
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://wa.link/4cwhyt"));
-                context.startActivity(intent);
             }
         });
 
@@ -175,7 +161,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 cancelPesanan(position, documentId);
-                hapusDariRiwayat(documentId);
                 Toast.makeText(context, "Pemesanan dibatalkan", Toast.LENGTH_SHORT).show();
             }
         });
@@ -197,24 +182,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                         notifyDataSetChanged();
                     } else {
                         Toast.makeText(context, "Gagal menghapus data", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    private void hapusDariRiwayat(String documentId) {
-        firestore.collection("Riwayat")
-                .document(documentId)
-                .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(context, "Data dihapus dari riwayat", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, "Gagal menghapus data dari riwayat", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
