@@ -16,11 +16,12 @@ public class HistoryModel {
     private String startTime;
     private String endTime;
     private Timestamp timeOrder;
+    private boolean paymentConfirmed;
 
     public HistoryModel() {
     }
 
-    public HistoryModel(String documentId, String namaSeniman, String hargaSeniman, String nama, String jalan, String kota, String provinsi, String kodepos, String telepon, String tanggal, String startTime, String endTime, Timestamp timeOrder) {
+    public HistoryModel(String documentId, String namaSeniman, String hargaSeniman, String nama, String jalan, String kota, String provinsi, String kodepos, String telepon, String tanggal, String startTime, String endTime, Timestamp timeOrder, boolean paymentConfirmed) {
         this.documentId = documentId;
         this.namaSeniman = namaSeniman;
         this.hargaSeniman = hargaSeniman;
@@ -34,6 +35,7 @@ public class HistoryModel {
         this.startTime = startTime;
         this.endTime = endTime;
         this.timeOrder = timeOrder;
+        this.paymentConfirmed = paymentConfirmed;
     }
 
     public String getDocumentId() {
@@ -138,5 +140,13 @@ public class HistoryModel {
 
     public void setTimeOrder(Timestamp timeOrder) {
         this.timeOrder = timeOrder;
+    }
+
+    public boolean isPaymentConfirmed() {
+        return paymentConfirmed;
+    }
+
+    public void setPaymentConfirmed(boolean paymentConfirmed) {
+        this.paymentConfirmed = paymentConfirmed;
     }
 }

@@ -23,6 +23,7 @@
                 android:layout_weight="1"
                 android:textStyle="bold"
                 android:textSize="16sp"/>
+
             <TextView
                 android:id="@+id/text_order"
                 android:layout_width="wrap_content"
@@ -32,7 +33,7 @@
                 android:textSize="13sp"/>
 
             <TextView
-                android:id="@+id/history_order"
+                android:id="@+id/admin_kelola_order"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/background"
@@ -42,7 +43,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/history_nama"
+            android:id="@+id/admin_kelola_nama"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Ki Warseno Slank"
@@ -66,7 +67,7 @@
                 android:textSize="16sp"/>
 
             <TextView
-                android:id="@+id/history_customer"
+                android:id="@+id/admin_kelola_customer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/background"
@@ -90,7 +91,7 @@
                 android:textSize="16sp"/>
 
             <TextView
-                android:id="@+id/history_tanggal"
+                android:id="@+id/admin_kelola_tanggal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/background"
@@ -114,7 +115,7 @@
                 android:textSize="16sp"/>
 
             <TextView
-                android:id="@+id/history_waktu"
+                android:id="@+id/admin_kelola_waktu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/background"
@@ -137,7 +138,7 @@
                 android:textSize="16sp"/>
 
             <TextView
-                android:id="@+id/history_detail"
+                android:id="@+id/admin_kelola_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/background"
@@ -161,7 +162,7 @@
                 android:textSize="16sp"/>
 
             <TextView
-                android:id="@+id/history_harga"
+                android:id="@+id/admin_kelola_harga"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/background"
@@ -169,43 +170,21 @@
                 android:textStyle="bold"
                 android:textSize="16sp"/>
         </LinearLayout>
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:gravity="end">-->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="end">
-
-            <Button
-                android:id="@+id/btn_batal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:backgroundTint="@color/red"
-                android:text="Batalkan"
-                android:drawableLeft="@drawable/ic_cancel"
-                android:layout_marginRight="5dp"/>
-
-            <Button
-                android:id="@+id/btn_cancel_admin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:backgroundTint="@color/colorButton"
-                android:text="Batalkan"
-                android:layout_marginRight="5dp"
-                android:drawableLeft="@drawable/ic_cancel"/>
-
-            <Button
-                android:id="@+id/btn_bayar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:backgroundTint="@color/background"
-                android:layout_marginRight="5dp"
-                android:text="Bayar"
-                android:drawableLeft="@drawable/ic_payment"/>
-        </LinearLayout>
+<!--            <Button-->
+<!--                android:id="@+id/btn_batal_pesanan"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:backgroundTint="@color/red"-->
+<!--                android:text="Batalkan"-->
+<!--                android:drawableLeft="@drawable/ic_cancel"-->
+<!--                android:layout_marginRight="5dp"/>-->
+<!--        </LinearLayout>-->
     </LinearLayout>
-
 </androidx.cardview.widget.CardView>

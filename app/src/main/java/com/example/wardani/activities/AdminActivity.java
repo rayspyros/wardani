@@ -28,8 +28,8 @@ public class AdminActivity extends AppCompatActivity {
             }
         });
 
-        // Find the LinearLayout for "Kelola Seniman" menu
         LinearLayout kelolaSenimanLayout = findViewById(R.id.kelola_seniman);
+        LinearLayout kelolaPesananLayout = findViewById(R.id.kelola_pemesanan);
 
         // Set click listener for "Kelola Seniman" menu
         kelolaSenimanLayout.setOnClickListener(new View.OnClickListener() {
@@ -37,6 +37,16 @@ public class AdminActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Create Intent to open AdminKelolaSenimanActivity
                 Intent intent = new Intent(AdminActivity.this, AdminKelolaSenimanActivity.class);
+                // Start new activity
+                startActivity(intent);
+            }
+        });
+
+        kelolaPesananLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create Intent to open AdminKelolaSenimanActivity
+                Intent intent = new Intent(AdminActivity.this, AdminKelolaPesananActivity.class);
                 // Start new activity
                 startActivity(intent);
             }
