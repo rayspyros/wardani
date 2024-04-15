@@ -31,7 +31,7 @@ public class AdminKelolaPesananActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private AdminKelolaPesananAdapter adapter;
     private List<AdminKelolaPesananModel> pesananList;
-    private SwipeRefreshLayout swipeRefreshLayout; // Deklarasikan SwipeRefreshLayout
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,25 +50,23 @@ public class AdminKelolaPesananActivity extends AppCompatActivity {
         });
 
         recyclerViewPesanan = findViewById(R.id.recyclerViewPesanan);
-        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout); // Inisialisasi SwipeRefreshLayout
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         recyclerViewPesanan.setLayoutManager(new LinearLayoutManager(this));
         pesananList = new ArrayList<>();
-        adapter = new AdminKelolaPesananAdapter(this, pesananList, swipeRefreshLayout); // Sambungkan SwipeRefreshLayout dengan adapter
+        adapter = new AdminKelolaPesananAdapter(this, pesananList, swipeRefreshLayout);
         recyclerViewPesanan.setAdapter(adapter);
 
         db = FirebaseFirestore.getInstance();
         loadDataFromFirestore();
 
-        Button btnFilter = findViewById(R.id.btnFilter);
-        btnFilter.setOnClickListener(v -> {
-            showFilterDialog();
-        });
+//        Button btnFilter = findViewById(R.id.btnFilter);
+//        btnFilter.setOnClickListener(v -> {
+//            showFilterDialog();
+//        });
 
-        // Atur aksi ketika swipe refresh
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Load data from Firestore again
                 loadDataFromFirestore();
             }
         });
@@ -78,17 +76,18 @@ public class AdminKelolaPesananActivity extends AppCompatActivity {
         db.collection("Riwayat")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    pesananList.clear(); // Clear the list before adding new data
+                    pesananList.clear(); // Hapus daftar sebelum menambahkan data baru
                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         AdminKelolaPesananModel model = documentSnapshot.toObject(AdminKelolaPesananModel.class);
                         pesananList.add(model);
                     }
-                    adapter.notifyDataSetChanged();
-                    stopRefreshing(); // Stop refreshing when data is loaded
+                    adapter.notifyDataSetChanged(); // Tambahkan ini untuk memperbarui tampilan
+                    adapter.filterData("terbaru"); // Panggil filterData dengan opsi "terbaru"
+                    stopRefreshing(); // Berhenti menyegarkan ketika data dimuat
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(AdminKelolaPesananActivity.this, "Failed to load data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    stopRefreshing(); // Stop refreshing when there's a failure
+                    Toast.makeText(AdminKelolaPesananActivity.this, "Gagal memuat data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    stopRefreshing(); // Berhenti menyegarkan jika ada kegagalan
                 });
     }
 
@@ -103,7 +102,7 @@ public class AdminKelolaPesananActivity extends AppCompatActivity {
         builder.setTitle("Pilih Filter");
         String[] filterOptions = {"Terbaru", "Terlama"};
         builder.setItems(filterOptions, (dialog, which) -> {
-            String selectedOption = filterOptions[which];
+            String selectedOption = filterOptions[which].toLowerCase(); // Mengubah pilihan ke huruf kecil
             filterData(selectedOption);
         });
         builder.show();

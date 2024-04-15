@@ -28,7 +28,7 @@
                 android:id="@+id/text_order"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tanggal Pemesanan: "
+                android:text="ID Order: "
                 android:textStyle="bold"
                 android:textSize="13sp"/>
 

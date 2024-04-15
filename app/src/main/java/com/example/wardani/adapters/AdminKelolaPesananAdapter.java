@@ -50,7 +50,7 @@ public class AdminKelolaPesananAdapter extends RecyclerView.Adapter<AdminKelolaP
         holder.adminKelolaTanggal.setText(pesanan.getTanggal());
         holder.adminKelolaWaktu.setText(pesanan.getWaktu());
         holder.adminKelolaDetail.setText(pesanan.getDetail());
-        holder.adminKelolaHarga.setText(pesanan.getHarga());
+        holder.adminKelolaHarga.setText("Rp." + pesanan.getHarga());
     }
 
     @Override
@@ -73,7 +73,6 @@ public class AdminKelolaPesananAdapter extends RecyclerView.Adapter<AdminKelolaP
         }
     }
 
-    // Method to filter data based on the filter option (terbaru/terlama)
     public void filterData(String filterOption) {
         filteredPesananList.clear();
         filteredPesananList.addAll(pesananList); // Reset filtered list to original list

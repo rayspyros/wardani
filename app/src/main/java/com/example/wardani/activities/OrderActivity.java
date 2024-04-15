@@ -51,10 +51,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class OrderActivity extends AppCompatActivity
-//        implements TransactionFinishedCallback
-{
-
+public class OrderActivity extends AppCompatActivity {
     EditText namaSeniman;
     EditText hargaSeniman;
     static EditText nama;
@@ -196,6 +193,7 @@ public class OrderActivity extends AppCompatActivity
             orderData.put("startTime", startTimeEditText.getText().toString());
             orderData.put("endTime", endTimeEditText.getText().toString());
             orderData.put("timeOrder", FieldValue.serverTimestamp());
+            orderData.put("status", "Belum Dibayar");
 
             // Mengatur tanggal real-time
             Calendar calendar = Calendar.getInstance();
