@@ -1,5 +1,8 @@
 package com.example.wardani.adapters;
 
+import static com.example.wardani.activities.HistoryActivity.PAYMENT_REQUEST_CODE;
+
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -80,16 +83,24 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                             historyModel.getJalan() + ", " + historyModel.getKota() + ", " + historyModel.getProvinsi() + ", " + historyModel.getKodepos(),
                             String.valueOf(historyModel.getHargaSeniman()), holder.order.getText().toString(), historyModel, position);
                 } else {
-                    goToPaymentActivity(historyModel.getNamaSeniman(), historyModel.getNama(), historyModel.getTanggal(),
-                            historyModel.getStartTime() + " - " + historyModel.getEndTime(),
-                            historyModel.getJalan() + ", " + historyModel.getKota() + ", " + historyModel.getProvinsi() + ", " + historyModel.getKodepos(),
-                            String.valueOf(historyModel.getHargaSeniman()), holder.order.getText().toString(), position);
+                    // Start PaymentActivity for result
+                    Intent intent = new Intent(context, PaymentActivity.class);
+                    intent.putExtra("ID_ITEM", historyModel.getDocumentId());
+                    intent.putExtra("CUSTOMER", historyModel.getNama());
+                    intent.putExtra("NAMA", historyModel.getNamaSeniman());
+                    intent.putExtra("TANGGAL", historyModel.getTanggal());
+                    intent.putExtra("WAKTU", historyModel.getStartTime() + " - " + historyModel.getEndTime());
+                    intent.putExtra("DETAIL", historyModel.getJalan() + ", " + historyModel.getKota() + ", " + historyModel.getProvinsi() + ", " + historyModel.getKodepos());
+                    intent.putExtra("HARGA", String.valueOf(historyModel.getHargaSeniman()));
+                    intent.putExtra("ORDER", holder.order.getText().toString());
+                    intent.putExtra("POSITION", position);
+                    ((Activity) context).startActivityForResult(intent, PAYMENT_REQUEST_CODE);
                 }
             }
         });
     }
 
-    private void goToPaymentActivity(String nama, String customer, String tanggal, String waktu, String detail, String harga, String order, int position) {
+    private void goToPaymentActivity(String nama, String customer, String tanggal, String waktu, String detail, String harga, String order, String status, int position) {
         Intent intent = new Intent(context, PaymentActivity.class);
         intent.putExtra("CUSTOMER", customer);
         intent.putExtra("NAMA", nama);
@@ -98,9 +109,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         intent.putExtra("DETAIL", detail);
         intent.putExtra("HARGA", harga);
         intent.putExtra("ORDER", order);
+        intent.putExtra("STATUS", status); // Tambahkan status ke dalam intent
         intent.putExtra("POSITION", position); // Pass position to PaymentActivity
         context.startActivity(intent);
     }
+
 
     private void showPaymentConfirmationDialog(String nama, String customer, String tanggal, String waktu, String detail, String harga, String order, HistoryModel historyModel, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -111,7 +124,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             public void onClick(DialogInterface dialog, int which) {
                 historyModel.setPaymentConfirmed(true);
                 notifyDataSetChanged();
-                goToPaymentActivity(nama, customer, tanggal, waktu, detail, harga, order, position);
+                goToPaymentActivity(nama, customer, tanggal, waktu, detail, harga, order, historyModel.getStatus(), position); // Tambahkan status
             }
         });
         builder.setNegativeButton("Tidak", null);
@@ -119,6 +132,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
 
     private void showCancelConfirmationDialog(int position, String documentId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);

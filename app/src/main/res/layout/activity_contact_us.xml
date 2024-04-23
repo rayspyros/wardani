@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.ContactUsActivity"
     android:background="@color/white">
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/contactus_toolbar"
         android:layout_width="match_parent"
@@ -136,4 +136,14 @@
         </RelativeLayout>
     </ScrollView>
 
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/background"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <include layout="@layout/bottom_navigation_layout" />
+    </LinearLayout>
 </RelativeLayout>

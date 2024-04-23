@@ -1,7 +1,9 @@
 package com.example.wardani.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,6 +30,7 @@ import java.util.List;
 
 public class HistoryActivity extends AppCompatActivity {
 
+    public static final int PAYMENT_REQUEST_CODE = 1;
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private List<HistoryModel> historyModelList;
@@ -44,14 +47,35 @@ public class HistoryActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
 
-        toolbar = findViewById(R.id.history_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ImageButton btnHome = findViewById(R.id.btn_home);
+        ImageButton btnKontak = findViewById(R.id.btn_kontakkami);
+        ImageButton btnSearch = findViewById(R.id.btn_artist);
+        ImageButton btnProfile = findViewById(R.id.btn_profile);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        toolbar = findViewById(R.id.history_toolbar);
+
+        btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                finish();
+            public void onClick(View v) {
+                startActivity(new Intent(HistoryActivity.this, MainActivity.class));
+            }
+        });
+        btnKontak.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HistoryActivity.this, ContactUsActivity.class));
+            }
+        });
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HistoryActivity.this, ShowAllActivity.class));
+            }
+        });
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HistoryActivity.this, ProfileActivity.class));
             }
         });
 
@@ -75,5 +99,29 @@ public class HistoryActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PAYMENT_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                // Mendapatkan status pembayaran yang diperbarui dari Intent
+                String updatedStatus = data.getStringExtra("UPDATED_STATUS");
+                if (updatedStatus != null && updatedStatus.equals("Sudah Dibayar")) {
+                    // Menampilkan pesan bahwa pembayaran berhasil
+                    Toast.makeText(this, "Pembayaran berhasil", Toast.LENGTH_SHORT).show();
+                    // Memperbarui tampilan status di RecyclerView
+                    int position = data.getIntExtra("POSITION", -1);
+                    if (position != -1) {
+                        historyModelList.get(position).setStatus(updatedStatus);
+                        historyAdapter.notifyItemChanged(position);
+                    }
+                }
+            } else if (resultCode == RESULT_CANCELED) {
+                // Menampilkan pesan bahwa pembayaran dibatalkan
+                Toast.makeText(this, "Pembayaran dibatalkan", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

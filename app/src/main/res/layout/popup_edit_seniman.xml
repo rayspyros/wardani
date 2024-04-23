@@ -4,18 +4,28 @@
     android:padding="16dp"
     android:background="@color/white">
 
-    <EditText
-        android:id="@+id/pp2_url_gambar"
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/iv2_gambar"
+        android:layout_width="80dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/placeholder_img"
+        android:layout_centerHorizontal="true"
+        android:scaleType="centerCrop"/>
+
+    <Button
+        android:id="@+id/btn2_pilih_foto"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="URL Gambar"
-        android:inputType="textUri"/>
+        android:layout_below="@id/iv2_gambar"
+        android:layout_centerHorizontal="true"
+        android:text="Pilih Foto"/>
 
     <EditText
         android:id="@+id/pp2_nama_dalang"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/pp2_url_gambar"
+        android:layout_below="@id/btn2_pilih_foto"
         android:hint="Nama Seniman"
         android:inputType="text"/>
 

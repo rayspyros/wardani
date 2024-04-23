@@ -1,7 +1,9 @@
 package com.example.wardani.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -43,6 +45,10 @@ public class AddedActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.added_toolbar);
 
+        ImageButton btnHome = findViewById(R.id.btn_home);
+        ImageButton btnSearch = findViewById(R.id.btn_artist);
+        ImageButton btnProfile = findViewById(R.id.btn_profile);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -50,6 +56,31 @@ public class AddedActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+
+        // Set event listener for each button
+        btnHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle navigation to Home activity
+                startActivity(new Intent(AddedActivity.this, MainActivity.class));
+            }
+        });
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle navigation to Search activity
+                startActivity(new Intent(AddedActivity.this, ShowAllActivity.class));
+            }
+        });
+
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle navigation to Profile activity
+                startActivity(new Intent(AddedActivity.this, ProfileActivity.class));
             }
         });
 

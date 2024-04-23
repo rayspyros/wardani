@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_logout"
-        android:title="Logout"
-        android:icon="@drawable/logout"
+        android:id="@+id/menu_admin"
+        android:title="Hubungi Kami"
+        android:icon="@drawable/ic_admin"
         app:showAsAction="always"/>
 
     <item
@@ -15,21 +15,9 @@
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/menu_history"
-        android:title="Riwayat Pemesanan"
-        android:icon="@drawable/history"
-        app:showAsAction="always"/>
-
-    <item
-        android:id="@+id/menu_hubungi_kami"
-        android:title="Hubungi Kami"
-        android:icon="@drawable/hubungi_kami"
-        app:showAsAction="always"/>
-
-    <item
-        android:id="@+id/menu_admin"
-        android:title="Hubungi Kami"
-        android:icon="@drawable/ic_admin"
+        android:id="@+id/menu_logout"
+        android:title="Logout"
+        android:icon="@drawable/logout"
         app:showAsAction="always"/>
 
 </menu>

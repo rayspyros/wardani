@@ -1,14 +1,19 @@
 package com.example.wardani.activities;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+import static com.example.wardani.adapters.AdminKelolaSenimanAdapter.PICK_IMAGE_REQUEST;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,6 +36,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,10 +45,10 @@ import java.util.Map;
 public class AdminKelolaSenimanActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private Button tambahSenimanButton;
     private AdminKelolaSenimanAdapter adminKelolaSenimanAdapter;
     private List<AdminKelolaSenimanModel> adminKelolaSenimanModelList;
     private FirebaseFirestore db;
+    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +70,8 @@ public class AdminKelolaSenimanActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Panggil metode getDataFromFirestore() untuk mendapatkan data terbaru
                 getDataFromFirestore();
-                swipeRefreshLayout.setRefreshing(false); // Akhiri animasi refresh setelah selesai
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -74,22 +79,18 @@ public class AdminKelolaSenimanActivity extends AppCompatActivity {
         btnTambahSeniman.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Tampilkan dialog pop-up
                 tampilkanDialogTambahSeniman();
             }
         });
 
-        // Inisialisasi RecyclerView
         recyclerView = findViewById(R.id.recycler_view_seniman);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adminKelolaSenimanModelList = new ArrayList<>();
         adminKelolaSenimanAdapter = new AdminKelolaSenimanAdapter(this, adminKelolaSenimanModelList);
         recyclerView.setAdapter(adminKelolaSenimanAdapter);
 
-        // Inisialisasi Firestore
         db = FirebaseFirestore.getInstance();
 
-        // Mendapatkan data dari Firestore
         getDataFromFirestore();
     }
 
@@ -97,10 +98,18 @@ public class AdminKelolaSenimanActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.popup_tambah_seniman, null);
 
-        final EditText ppUrlGambar = view.findViewById(R.id.pp_url_gambar);
         final EditText ppNamaSeniman = view.findViewById(R.id.pp_nama_dalang);
         final EditText ppHargaSeniman = view.findViewById(R.id.pp_harga_jasa);
         final EditText ppDeskripsi = view.findViewById(R.id.pp_deskripsi);
+        imageView = view.findViewById(R.id.iv_gambar); // Inisialisasi imageView di sini
+        Button btnPilihFoto = view.findViewById(R.id.btn_pilih_foto);
+
+        btnPilihFoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pilihFoto();
+            }
+        });
 
         builder.setView(view);
         final AlertDialog dialog = builder.create();
@@ -110,50 +119,51 @@ public class AdminKelolaSenimanActivity extends AppCompatActivity {
         btnTambah.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Ambil data dari EditText
-                String img_url = ppUrlGambar.getText().toString();
                 String nama_dalang = ppNamaSeniman.getText().toString();
                 String harga_jasa_str = ppHargaSeniman.getText().toString();
                 String deskripsi = ppDeskripsi.getText().toString();
 
-                // Cek apakah semua field telah diisi
-                if (TextUtils.isEmpty(img_url) || TextUtils.isEmpty(nama_dalang) || TextUtils.isEmpty(harga_jasa_str) || TextUtils.isEmpty(deskripsi)) {
+                if (TextUtils.isEmpty(nama_dalang) || TextUtils.isEmpty(harga_jasa_str) || TextUtils.isEmpty(deskripsi)) {
                     Toast.makeText(AdminKelolaSenimanActivity.this, "Semua field harus diisi", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Tampilkan dialog konfirmasi sebelum menambahkan data
                     int harga_jasa = Integer.parseInt(harga_jasa_str);
-                    tampilkanKonfirmasiTambahData(img_url, nama_dalang, harga_jasa, deskripsi, dialog);
+                    tampilkanKonfirmasiTambahData(nama_dalang, harga_jasa, deskripsi, dialog);
                 }
             }
         });
     }
 
-    private void tampilkanKonfirmasiTambahData(String img_url, String nama_dalang, int harga_jasa, String deskripsi, AlertDialog dialog) {
+    private void pilihFoto() {
+        // Buat intent untuk memilih gambar dari galeri
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Pilih Foto"), PICK_IMAGE_REQUEST);
+    }
+
+    private void tampilkanKonfirmasiTambahData(String nama_dalang, int harga_jasa, String deskripsi, AlertDialog dialog) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Konfirmasi");
         builder.setMessage("Apakah Anda yakin ingin menambahkan data seniman ini?");
         builder.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                // Tambahkan data ke Firestore setelah pengguna mengonfirmasi
-                tambahkanDataKeFirestore(img_url, nama_dalang, harga_jasa, deskripsi);
+                tambahkanDataKeFirestore(nama_dalang, harga_jasa, deskripsi);
                 dialog.dismiss();
             }
         });
         builder.setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                // Batal menambahkan data, jadi hanya keluar dari dialog konfirmasi
                 dialog.dismiss();
             }
         });
         builder.show();
     }
 
-    private void tambahkanDataKeFirestore(String img_url, String nama_dalang, int harga_jasa, String deskripsi) {
+    private void tambahkanDataKeFirestore(String nama_dalang, int harga_jasa, String deskripsi) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> data = new HashMap<>();
-        data.put("img_url", img_url);
         data.put("nama_dalang", nama_dalang);
         data.put("harga_jasa", harga_jasa);
         data.put("deskripsi", deskripsi);
@@ -163,16 +173,13 @@ public class AdminKelolaSenimanActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        // Data berhasil ditambahkan
                         Toast.makeText(AdminKelolaSenimanActivity.this, "Data berhasil ditambahkan", Toast.LENGTH_SHORT).show();
-                        // Ambil data terbaru dari Firestore
                         getDataFromFirestore();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        // Gagal menambahkan data
                         Toast.makeText(AdminKelolaSenimanActivity.this, "Gagal menambahkan data", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -185,20 +192,32 @@ public class AdminKelolaSenimanActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            // Bersihkan data yang ada
                             adminKelolaSenimanModelList.clear();
-                            // Tambahkan data yang baru dari Firestore
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 AdminKelolaSenimanModel adminKelolaSenimanModel = document.toObject(AdminKelolaSenimanModel.class);
-                                adminKelolaSenimanModel.setId(document.getId()); // Set ID dari dokumen
+                                adminKelolaSenimanModel.setId(document.getId());
                                 adminKelolaSenimanModelList.add(adminKelolaSenimanModel);
                             }
-                            // Memberitahu adapter bahwa data telah berubah
                             adminKelolaSenimanAdapter.notifyDataSetChanged();
                         } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
+                            Log.d("Firestore", "Error getting documents: ", task.getException());
                         }
                     }
                 });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri uri = data.getData();
+            try {
+                // Set gambar yang dipilih ke ImageView
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                imageView.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

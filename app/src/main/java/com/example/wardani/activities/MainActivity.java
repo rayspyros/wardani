@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -36,6 +38,37 @@ public class MainActivity extends AppCompatActivity {
 
         homeFragment = new HomeFragment();
         loadFragment(homeFragment);
+
+        ImageButton btnKontak = findViewById(R.id.btn_kontakkami);
+        ImageButton btnHistory = findViewById(R.id.btn_history);
+        ImageButton btnHome = findViewById(R.id.btn_home);
+        ImageButton btnSearch = findViewById(R.id.btn_artist);
+        ImageButton btnProfile = findViewById(R.id.btn_profile);
+
+        btnKontak.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ContactUsActivity.class));
+            }
+        });
+        btnHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, HistoryActivity.class));
+            }
+        });
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ShowAllActivity.class));
+            }
+        });
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+            }
+        });
     }
 
     private void loadFragment(Fragment fragment) {
@@ -52,12 +85,16 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         // Mendapatkan item menu_admin
+        MenuItem logoutMenuItem = menu.findItem(R.id.menu_logout);
         MenuItem adminMenuItem = menu.findItem(R.id.menu_admin);
+        MenuItem addedMenuItem = menu.findItem(R.id.menu_added);
 
         // Jika pengguna saat ini tidak null dan alamat emailnya adalah "adminwardani123@gmail.com"
         // maka tampilkan opsi menu_admin, jika tidak, sembunyikan opsi tersebut
         if (currentUser != null && currentUser.getEmail().equals("adminwardani123@gmail.com")) {
             adminMenuItem.setVisible(true);
+            logoutMenuItem.setVisible(true);
+            addedMenuItem.setVisible(false);
         } else {
             adminMenuItem.setVisible(false);
         }
@@ -72,10 +109,6 @@ public class MainActivity extends AppCompatActivity {
             showLogoutConfirmationDialog();
         } else if (id == R.id.menu_added) {
             startActivity(new Intent(MainActivity.this, AddedActivity.class));
-        } else if (id == R.id.menu_history) {
-            startActivity(new Intent(MainActivity.this, HistoryActivity.class));
-        } else if (id == R.id.menu_hubungi_kami) {
-            startActivity(new Intent(MainActivity.this, ContactUsActivity.class));
         } else if (id == R.id.menu_admin) {
             startActivity(new Intent(MainActivity.this, AdminActivity.class));
         }

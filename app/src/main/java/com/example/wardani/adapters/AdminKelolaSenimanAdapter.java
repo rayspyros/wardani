@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +20,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.wardani.R;
+import com.example.wardani.activities.AdminKelolaPesananActivity;
 import com.example.wardani.activities.DetailSenimanActivity;
 import com.example.wardani.models.AdminKelolaSenimanModel;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -27,6 +31,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +44,8 @@ public class AdminKelolaSenimanAdapter extends RecyclerView.Adapter<AdminKelolaS
     private Context context;
     private List<AdminKelolaSenimanModel> adminKelolaSenimanModelList;
     private SharedPreferences sharedPreferences;
+    public static final int PICK_IMAGE_REQUEST = 1;
+    private Uri selectedImageUri;
 
     public AdminKelolaSenimanAdapter(Context context, List<AdminKelolaSenimanModel> adminKelolaSenimanModelList) {
         this.context = context;
@@ -106,16 +115,29 @@ public class AdminKelolaSenimanAdapter extends RecyclerView.Adapter<AdminKelolaS
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View view = LayoutInflater.from(context).inflate(R.layout.popup_edit_seniman, null);
 
-        EditText pp2UrlGambar = view.findViewById(R.id.pp2_url_gambar);
         EditText pp2NamaSeniman = view.findViewById(R.id.pp2_nama_dalang);
         EditText pp2HargaSeniman = view.findViewById(R.id.pp2_harga_jasa);
         EditText pp2Deskripsi = view.findViewById(R.id.pp2_deskripsi);
+        ImageView iv2_gambar = view.findViewById(R.id.iv2_gambar); // ImageView untuk menampilkan gambar
 
         // Tampilkan data saat ini pada dialog edit
-        pp2UrlGambar.setText(item.getImg_url());
         pp2NamaSeniman.setText(item.getNama_dalang());
         pp2HargaSeniman.setText(String.valueOf(item.getHarga_jasa()));
         pp2Deskripsi.setText(item.getDeskripsi());
+
+        // Menampilkan gambar dari URL menggunakan Glide
+        String imageUrl = item.getImg_url() + ".png"; // Menambahkan ekstensi .png ke URL gambar
+        Glide.with(context)
+                .load(imageUrl)
+                .into(iv2_gambar);
+
+        Button btnPilihFoto = view.findViewById(R.id.btn2_pilih_foto);
+        btnPilihFoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pilihFotoDariGaleri();
+            }
+        });
 
         builder.setView(view);
         AlertDialog dialog = builder.create();
@@ -125,16 +147,31 @@ public class AdminKelolaSenimanAdapter extends RecyclerView.Adapter<AdminKelolaS
         btnSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tampilkanKonfirmasiSimpan(item, dialog, pp2UrlGambar.getText().toString(), pp2NamaSeniman.getText().toString(),
+                tampilkanKonfirmasiSimpan(item, dialog, pp2NamaSeniman.getText().toString(),
                         Integer.parseInt(pp2HargaSeniman.getText().toString()), pp2Deskripsi.getText().toString());
             }
         });
     }
 
-    private void perbaruiDataDiFirestore(String documentId, String img_url, String nama_dalang, int harga_jasa, String deskripsi) {
+    private void pilihFotoDariGaleri() {
+        Intent galleryIntent = new Intent();
+        galleryIntent.setType("image/*");
+        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+        ((AdminKelolaPesananActivity) context).startActivityForResult(Intent.createChooser(galleryIntent, "Pilih Gambar"), PICK_IMAGE_REQUEST);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == AdminKelolaPesananActivity.RESULT_OK && data != null && data.getData() != null) {
+            // Mendapatkan URI gambar yang dipilih dari galeri
+            selectedImageUri = data.getData();
+            // Tampilkan pesan toast atau lakukan operasi lainnya sesuai kebutuhan
+            Toast.makeText(context, "Gambar dipilih: " + selectedImageUri.toString(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void perbaruiDataDiFirestore(String documentId, String nama_dalang, int harga_jasa, String deskripsi) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> data = new HashMap<>();
-        data.put("img_url", img_url);
         data.put("nama_dalang", nama_dalang);
         data.put("harga_jasa", harga_jasa);
         data.put("deskripsi", deskripsi);
@@ -234,7 +271,7 @@ public class AdminKelolaSenimanAdapter extends RecyclerView.Adapter<AdminKelolaS
         builder.show();
     }
 
-    private void tampilkanKonfirmasiSimpan(AdminKelolaSenimanModel item, AlertDialog dialog, String img_url, String nama_dalang, int harga_jasa, String deskripsi) {
+    private void tampilkanKonfirmasiSimpan(AdminKelolaSenimanModel item, AlertDialog dialog, String nama_dalang, int harga_jasa, String deskripsi) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Konfirmasi");
         builder.setMessage("Apakah Anda yakin ingin menyimpan perubahan?");
@@ -242,7 +279,7 @@ public class AdminKelolaSenimanAdapter extends RecyclerView.Adapter<AdminKelolaS
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 // Perbarui data ke Firestore setelah diedit
-                perbaruiDataDiFirestore(item.getId(), img_url, nama_dalang, harga_jasa, deskripsi);
+                perbaruiDataDiFirestore(item.getId(), nama_dalang, harga_jasa, deskripsi);
                 dialog.dismiss();
             }
         });

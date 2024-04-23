@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,13 +30,33 @@ public class ContactUsActivity extends AppCompatActivity {
         imageView = findViewById(R.id.iconKontak);
         textView = findViewById(R.id.nomor_wa);
 
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ImageButton btnHome = findViewById(R.id.btn_home);
+        ImageButton btnHistory = findViewById(R.id.btn_history);
+        ImageButton btnSearch = findViewById(R.id.btn_artist);
+        ImageButton btnProfile = findViewById(R.id.btn_profile);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                finish();
+            public void onClick(View v) {
+                startActivity(new Intent(ContactUsActivity.this, MainActivity.class));
+            }
+        });
+        btnHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ContactUsActivity.this, HistoryActivity.class));
+            }
+        });
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ContactUsActivity.this, ShowAllActivity.class));
+            }
+        });
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ContactUsActivity.this, ProfileActivity.class));
             }
         });
 

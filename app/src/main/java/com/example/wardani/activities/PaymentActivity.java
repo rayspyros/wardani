@@ -1,10 +1,5 @@
 package com.example.wardani.activities;
 
-import static com.example.wardani.BuildConfig.BASE_URL;
-import static com.example.wardani.BuildConfig.CLIENT_KEY;
-
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,13 +7,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.wardani.BuildConfig;
 import com.example.wardani.R;
-import com.example.wardani.adapters.HistoryAdapter;
-import com.example.wardani.models.HistoryModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback;
@@ -36,32 +29,28 @@ import com.midtrans.sdk.uikit.SdkUIFlowBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class PaymentActivity extends AppCompatActivity implements TransactionFinishedCallback {
-    private TextView textViewNama, textViewCustomer, textViewTanggal, textViewWaktu, textViewDetail, textViewHarga;
+    private TextView textViewNama, textViewCustomer, textViewTanggal, textViewWaktu, textViewDetail, textViewHarga, textViewOrder, textViewStatus;
     private Button btnPayment;
-    private String name, customer, address, id_item;
+    private String name, order, customer, address, id_item, stats;
     private Double price;
     FirebaseFirestore firestore;
     FirebaseAuth auth;
-    private Context context;
-    private List<HistoryModel> historyModelList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
-        historyModelList = new ArrayList<>();
 
         firestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
-        Toolbar toolbar;
-        toolbar = findViewById(R.id.payment_toolbar);
+        Toolbar toolbar = findViewById(R.id.payment_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Pembayaran");
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,27 +64,33 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
         // Tangkap data yang diteruskan dari intent
         Intent intent = getIntent();
         if (intent != null) {
-            String id = intent.getStringExtra("ID");
+            String id = intent.getStringExtra("ID_ITEM");
             String nama = intent.getStringExtra("NAMA");
             String pemesan = intent.getStringExtra("CUSTOMER");
             String tanggal = intent.getStringExtra("TANGGAL");
             String waktu = intent.getStringExtra("WAKTU");
             String detail = intent.getStringExtra("DETAIL");
             String harga = intent.getStringExtra("HARGA");
+            String status = intent.getStringExtra("STATUS");
+            String pesanan = intent.getStringExtra("ORDER");
 
             name = nama;
+            stats = status;
             customer = pemesan;
             address = detail;
             id_item = id;
+            order = pesanan;
             price = Double.valueOf(harga);
 
             // Set data ke TextView
             textViewNama.setText(nama);
-            textViewCustomer.setText(customer);
+            textViewCustomer.setText(pemesan);
             textViewTanggal.setText(tanggal);
             textViewWaktu.setText(waktu);
             textViewDetail.setText(detail);
-            textViewHarga.setText(harga);
+            textViewHarga.setText("Rp. "+harga);
+            textViewOrder.setText(pesanan);
+            textViewStatus.setText(status);
         }
 
         initActionButtons();
@@ -105,11 +100,13 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
     private void iniBindViews(){
         // Inisialisasi TextView untuk menampilkan data
         textViewNama = findViewById(R.id.payment_nama);
-        textViewCustomer= findViewById(R.id.payment_customer);
+        textViewCustomer = findViewById(R.id.payment_customer);
         textViewTanggal = findViewById(R.id.payment_tanggal);
         textViewWaktu = findViewById(R.id.payment_waktu);
         textViewDetail = findViewById(R.id.payment_detail);
         textViewHarga = findViewById(R.id.payment_harga);
+        textViewOrder = findViewById(R.id.payment_tgl_order);
+        textViewStatus = findViewById(R.id.payment_status);
         btnPayment = findViewById(R.id.btnBayar);
     }
 
@@ -121,8 +118,10 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
         transactionRequestNew.setGopay(new Gopay("mysamplesdk:://midtrans"));
         transactionRequestNew.setShopeepay(new Shopeepay("mysamplesdk:://midtrans"));
 
+        // Set BCA Virtual Account as payment option
         transactionRequestNew.setBcaVa(new BcaBankTransferRequestModel("228538450983950"));
 
+        // Set item details
         ItemDetails itemDetails1 = new ItemDetails(id_item, price, 1, name);
         ArrayList<ItemDetails> itemDetailsList = new ArrayList<>();
         itemDetailsList.add(itemDetails1);
@@ -131,7 +130,7 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
     }
 
     private CustomerDetails initCustomerDetails() {
-        //define customer detail (mandatory for coreflow)
+        // Define customer detail (mandatory for coreflow)
         CustomerDetails mCustomerDetails = new CustomerDetails();
         mCustomerDetails.setFirstName(customer);
         mCustomerDetails.setShippingAddress(shippingAddress());
@@ -147,8 +146,8 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
     private void initMidtransSdk() {
         SdkUIFlowBuilder sdkUIFlowBuilder = SdkUIFlowBuilder.init()
                 .setContext(this) // context is mandatory
-                .setMerchantBaseUrl(BASE_URL)//set merchant url
-                .setClientKey(CLIENT_KEY) // client_key is mandatory
+                .setMerchantBaseUrl(BuildConfig.BASE_URL)//set merchant url
+                .setClientKey(BuildConfig.CLIENT_KEY) // client_key is mandatory
                 .setTransactionFinishedCallback(this) // set transaction finish callback (sdk callback
                 .enableLog(true) // enable sdk log
                 .setLanguage("id");
@@ -167,10 +166,7 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
                     ubahStatusPesanan(auth.getCurrentUser().getUid(), id_item);
                     // Menampilkan pesan transaksi berhasil
                     Toast.makeText(this, "Transaction Finished. ID: " + result.getResponse().getTransactionId(), Toast.LENGTH_LONG).show();
-                    // Kembali ke MainActivity setelah transaksi berhasil
-                    Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish(); // Menutup Activity saat ini (PaymentActivity)
+                    setResultAndFinish("Sudah Dibayar");
                     break;
                 case TransactionResult.STATUS_PENDING:
                     Toast.makeText(this, "Transaction Pending. ID: " + result.getResponse().getTransactionId(), Toast.LENGTH_LONG).show();
@@ -189,6 +185,8 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
             }
         }
     }
+
+
 
     private void initActionButtons() {
         btnPayment.setOnClickListener(v -> {
@@ -227,7 +225,7 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
         firestore.collection("Pesanan")
                 .document(auth.getCurrentUser().getUid())
                 .collection("User")
-                .document(this.id_item) // gunakan ID item sebagai referensi dokumen
+                .document(id_item) // gunakan ID item sebagai referensi dokumen
                 .update("status", "Sudah Dibayar")
                 .addOnSuccessListener(aVoid -> {
                     // Hapus tombol pembayaran
@@ -238,13 +236,11 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
                     Toast.makeText(this, "Gagal memperbarui status pesanan", Toast.LENGTH_SHORT).show();
                 });
     }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+    private void setResultAndFinish(String updatedStatus) {
+        // Mengirim status pembayaran yang diperbarui kembali ke HistoryActivity
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("UPDATED_STATUS", updatedStatus);
+        setResult(RESULT_OK, resultIntent);
         finish();
     }
 }

@@ -52,5 +52,4 @@
                 android:text="Rp. 15000000" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
 </LinearLayout>

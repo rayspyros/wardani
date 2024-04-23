@@ -6,11 +6,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.example.wardani.R;
 import com.example.wardani.adapters.ShowAllAdapter;
@@ -40,12 +42,34 @@ public class ShowAllActivity extends AppCompatActivity {
 
         // Inisialisasi elemen UI dan Firebase
         toolbar = findViewById(R.id.detail_showall_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+
+        ImageButton btnHome = findViewById(R.id.btn_home);
+        ImageButton btnKontak = findViewById(R.id.btn_kontakkami);
+        ImageButton btnProfile = findViewById(R.id.btn_profile);
+        ImageButton btnHistory = findViewById(R.id.btn_history);
+
+        btnKontak.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                finish();
+            public void onClick(View v) {
+                startActivity(new Intent(ShowAllActivity.this, ContactUsActivity.class));
+            }
+        });
+        btnHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ShowAllActivity.this, HistoryActivity.class));
+            }
+        });
+        btnHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ShowAllActivity.this, MainActivity.class));
+            }
+        });
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ShowAllActivity.this, ProfileActivity.class));
             }
         });
 

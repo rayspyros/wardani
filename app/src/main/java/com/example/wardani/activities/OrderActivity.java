@@ -326,7 +326,6 @@ public class OrderActivity extends AppCompatActivity {
                                 email.setText(document.getString("email"));
                                 jalan.setText(document.getString("alamat"));
                                 kota.setText(document.getString("kota"));
-                                provinsi.setText(document.getString("provinsi"));
                                 kode.setText(document.getString("kodepos"));
                                 telepon.setText(document.getString("telepon"));
                             } else {
@@ -337,5 +336,9 @@ public class OrderActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+        // Set provinsi menjadi "Jawa Tengah"
+        provinsi.setText("Jawa Tengah");
+        provinsi.setEnabled(false); // Mencegah pengguna mengubah atau mengklik provinsi
     }
 }

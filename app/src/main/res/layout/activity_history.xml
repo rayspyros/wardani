@@ -27,5 +27,16 @@
         app:layout_constraintWidth_percent=".9"
         tools:listitem="@layout/history_item" />
 
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/background"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <include layout="@layout/bottom_navigation_layout" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
