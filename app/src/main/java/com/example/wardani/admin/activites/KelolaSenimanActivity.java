@@ -1,6 +1,6 @@
-package com.example.wardani.activities;
+package com.example.wardani.admin.activites;
 
-import static com.example.wardani.adapters.AdminKelolaSenimanAdapter.PICK_IMAGE_REQUEST;
+import static com.example.wardani.admin.adapters.KelolaSenimanAdapter.PICK_IMAGE_REQUEST;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,8 +25,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.wardani.R;
-import com.example.wardani.adapters.AdminKelolaSenimanAdapter;
-import com.example.wardani.models.AdminKelolaSenimanModel;
+import com.example.wardani.admin.adapters.KelolaSenimanAdapter;
+import com.example.wardani.admin.models.KelolaSenimanModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,18 +42,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AdminKelolaSenimanActivity extends AppCompatActivity {
+public class KelolaSenimanActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private AdminKelolaSenimanAdapter adminKelolaSenimanAdapter;
-    private List<AdminKelolaSenimanModel> adminKelolaSenimanModelList;
+    private KelolaSenimanAdapter kelolaSenimanAdapter;
+    private List<KelolaSenimanModel> kelolaSenimanModelList;
     private FirebaseFirestore db;
     private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_kelola_seniman);
+        setContentView(R.layout.activity_kelola_seniman);
 
         Toolbar toolbar = findViewById(R.id.kelola_seniman_toolbar);
         setSupportActionBar(toolbar);
@@ -85,9 +85,9 @@ public class AdminKelolaSenimanActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recycler_view_seniman);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adminKelolaSenimanModelList = new ArrayList<>();
-        adminKelolaSenimanAdapter = new AdminKelolaSenimanAdapter(this, adminKelolaSenimanModelList);
-        recyclerView.setAdapter(adminKelolaSenimanAdapter);
+        kelolaSenimanModelList = new ArrayList<>();
+        kelolaSenimanAdapter = new KelolaSenimanAdapter(this, kelolaSenimanModelList);
+        recyclerView.setAdapter(kelolaSenimanAdapter);
 
         db = FirebaseFirestore.getInstance();
 
@@ -124,7 +124,7 @@ public class AdminKelolaSenimanActivity extends AppCompatActivity {
                 String deskripsi = ppDeskripsi.getText().toString();
 
                 if (TextUtils.isEmpty(nama_dalang) || TextUtils.isEmpty(harga_jasa_str) || TextUtils.isEmpty(deskripsi)) {
-                    Toast.makeText(AdminKelolaSenimanActivity.this, "Semua field harus diisi", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(KelolaSenimanActivity.this, "Semua field harus diisi", Toast.LENGTH_SHORT).show();
                 } else {
                     int harga_jasa = Integer.parseInt(harga_jasa_str);
                     tampilkanKonfirmasiTambahData(nama_dalang, harga_jasa, deskripsi, dialog);
@@ -173,14 +173,14 @@ public class AdminKelolaSenimanActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(AdminKelolaSenimanActivity.this, "Data berhasil ditambahkan", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(KelolaSenimanActivity.this, "Data berhasil ditambahkan", Toast.LENGTH_SHORT).show();
                         getDataFromFirestore();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(AdminKelolaSenimanActivity.this, "Gagal menambahkan data", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(KelolaSenimanActivity.this, "Gagal menambahkan data", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -192,13 +192,13 @@ public class AdminKelolaSenimanActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            adminKelolaSenimanModelList.clear();
+                            kelolaSenimanModelList.clear();
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                AdminKelolaSenimanModel adminKelolaSenimanModel = document.toObject(AdminKelolaSenimanModel.class);
-                                adminKelolaSenimanModel.setId(document.getId());
-                                adminKelolaSenimanModelList.add(adminKelolaSenimanModel);
+                                KelolaSenimanModel kelolaSenimanModel = document.toObject(KelolaSenimanModel.class);
+                                kelolaSenimanModel.setId(document.getId());
+                                kelolaSenimanModelList.add(kelolaSenimanModel);
                             }
-                            adminKelolaSenimanAdapter.notifyDataSetChanged();
+                            kelolaSenimanAdapter.notifyDataSetChanged();
                         } else {
                             Log.d("Firestore", "Error getting documents: ", task.getException());
                         }

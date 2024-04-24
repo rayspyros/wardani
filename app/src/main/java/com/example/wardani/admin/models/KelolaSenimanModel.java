@@ -1,6 +1,6 @@
-package com.example.wardani.models;
+package com.example.wardani.admin.models;
 
-public class AdminKelolaSenimanModel {
+public class KelolaSenimanModel {
     private String id;
     private String img_url;
     private String nama_dalang;
@@ -8,10 +8,10 @@ public class AdminKelolaSenimanModel {
     private String deskripsi;
     private Boolean tampilkan;
 
-    public AdminKelolaSenimanModel() {
+    public KelolaSenimanModel() {
     }
 
-    public AdminKelolaSenimanModel(String id, String img_url, String nama_dalang, int harga_jasa, String deskripsi, Boolean tampilkan) {
+    public KelolaSenimanModel(String id, String img_url, String nama_dalang, int harga_jasa, String deskripsi, Boolean tampilkan) {
         this.id = id;
         this.img_url = img_url;
         this.nama_dalang = nama_dalang;

@@ -19,12 +19,15 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/history_rec"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:overScrollMode="ifContentScrolls"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintDimensionRatio="H,9:16"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/history_toolbar"
-        app:layout_constraintWidth_percent=".9"
+        app:layout_constraintVertical_bias="0.489"
         tools:listitem="@layout/history_item" />
 
     <LinearLayout

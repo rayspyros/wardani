@@ -202,23 +202,29 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
     }
 
     private void simpanKeRiwayat(String customer, String nama, String tanggal, String waktu, String detail, String harga, String order) {
-        Map<String, Object> pesanan = new HashMap<>();
-        pesanan.put("Customer", customer);
-        pesanan.put("Nama", nama);
-        pesanan.put("Tanggal", tanggal);
-        pesanan.put("Waktu", waktu);
-        pesanan.put("Detail", detail);
-        pesanan.put("Harga", harga);
-        pesanan.put("Order", order);
+        String tglOrder = textViewOrder.getText().toString(); // Mendapatkan tgl_order dari TextView
+        if (!tglOrder.isEmpty()) {
+            // Membuat data pesanan
+            Map<String, Object> pesanan = new HashMap<>();
+            pesanan.put("customer", customer);
+            pesanan.put("nama", nama);
+            pesanan.put("tanggal", tanggal);
+            pesanan.put("waktu", waktu);
+            pesanan.put("detail", detail);
+            pesanan.put("harga", harga);
+            pesanan.put("order", order);
+            pesanan.put("tgl_order", tglOrder); // Menambahkan tgl_order ke dalam Map
 
-        firestore.collection("Riwayat")
-                .add(pesanan)
-                .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(PaymentActivity.this, "Pesanan berhasil disimpan dalam riwayat", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(PaymentActivity.this, "Gagal menyimpan pesanan dalam riwayat", Toast.LENGTH_SHORT).show();
-                });
+            // Menyimpan data pesanan ke koleksi "Riwayat" di Firestore
+            firestore.collection("Riwayat")
+                    .add(pesanan)
+                    .addOnSuccessListener(documentReference -> {
+                        Toast.makeText(PaymentActivity.this, "Pesanan berhasil disimpan dalam riwayat", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(PaymentActivity.this, "Gagal menyimpan pesanan dalam riwayat", Toast.LENGTH_SHORT).show();
+                    });
+        }
     }
 
     private void ubahStatusPesanan(String uid, String id_item) {

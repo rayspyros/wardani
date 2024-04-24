@@ -1,4 +1,4 @@
-package com.example.wardani.adapters;
+package com.example.wardani.admin.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.wardani.R;
-import com.example.wardani.models.AdminKelolaPesananModel;
+import com.example.wardani.admin.models.KelolaPesananModel;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -21,12 +21,12 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-public class AdminKelolaPesananAdapter extends RecyclerView.Adapter<AdminKelolaPesananAdapter.PesananViewHolder> {
+public class KelolaPesananAdapter extends RecyclerView.Adapter<KelolaPesananAdapter.PesananViewHolder> {
     private Context context;
-    private List<AdminKelolaPesananModel> pesananList;
-    private List<AdminKelolaPesananModel> filteredPesananList;
+    private List<KelolaPesananModel> pesananList;
+    private List<KelolaPesananModel> filteredPesananList;
 
-    public AdminKelolaPesananAdapter(Context context, List<AdminKelolaPesananModel> pesananList, SwipeRefreshLayout swipeRefreshLayout) {
+    public KelolaPesananAdapter(Context context, List<KelolaPesananModel> pesananList, SwipeRefreshLayout swipeRefreshLayout) {
         this.context = context;
         this.pesananList = pesananList;
         this.filteredPesananList = new ArrayList<>(pesananList);
@@ -41,7 +41,7 @@ public class AdminKelolaPesananAdapter extends RecyclerView.Adapter<AdminKelolaP
 
     @Override
     public void onBindViewHolder(@NonNull PesananViewHolder holder, int position) {
-        AdminKelolaPesananModel pesanan = filteredPesananList.get(position);
+        KelolaPesananModel pesanan = filteredPesananList.get(position);
 
         // Set data to views
         holder.adminKelolaOrder.setText(pesanan.getOrder());
@@ -50,7 +50,8 @@ public class AdminKelolaPesananAdapter extends RecyclerView.Adapter<AdminKelolaP
         holder.adminKelolaTanggal.setText(pesanan.getTanggal());
         holder.adminKelolaWaktu.setText(pesanan.getWaktu());
         holder.adminKelolaDetail.setText(pesanan.getDetail());
-        holder.adminKelolaHarga.setText("Rp." + pesanan.getHarga());
+        holder.adminKelolaHarga.setText(pesanan.getHarga());
+        holder.adminKelolaTglOrder.setText(pesanan.getTglOrder());
     }
 
     @Override
@@ -59,7 +60,7 @@ public class AdminKelolaPesananAdapter extends RecyclerView.Adapter<AdminKelolaP
     }
 
     public static class PesananViewHolder extends RecyclerView.ViewHolder {
-        TextView adminKelolaOrder, adminKelolaNama, adminKelolaCustomer, adminKelolaTanggal, adminKelolaWaktu, adminKelolaDetail, adminKelolaHarga;
+        TextView adminKelolaOrder, adminKelolaNama, adminKelolaCustomer, adminKelolaTanggal, adminKelolaWaktu, adminKelolaDetail, adminKelolaHarga, adminKelolaTglOrder;
 
         public PesananViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -70,6 +71,7 @@ public class AdminKelolaPesananAdapter extends RecyclerView.Adapter<AdminKelolaP
             adminKelolaWaktu = itemView.findViewById(R.id.admin_kelola_waktu);
             adminKelolaDetail = itemView.findViewById(R.id.admin_kelola_detail);
             adminKelolaHarga = itemView.findViewById(R.id.admin_kelola_harga);
+            adminKelolaTglOrder = itemView.findViewById(R.id.admin_tgl_order);
         }
     }
 
@@ -78,11 +80,11 @@ public class AdminKelolaPesananAdapter extends RecyclerView.Adapter<AdminKelolaP
         filteredPesananList.addAll(pesananList); // Reset filtered list to original list
 
         // Sorting the filtered list based on order date
-        Collections.sort(filteredPesananList, new Comparator<AdminKelolaPesananModel>() {
+        Collections.sort(filteredPesananList, new Comparator<KelolaPesananModel>() {
             DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
             @Override
-            public int compare(AdminKelolaPesananModel o1, AdminKelolaPesananModel o2) {
+            public int compare(KelolaPesananModel o1, KelolaPesananModel o2) {
                 try {
                     Date orderDate1 = dateFormat.parse(o1.getOrder());
                     Date orderDate2 = dateFormat.parse(o2.getOrder());

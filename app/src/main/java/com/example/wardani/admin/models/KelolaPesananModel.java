@@ -1,6 +1,6 @@
-package com.example.wardani.models;
+package com.example.wardani.admin.models;
 
-public class AdminKelolaPesananModel {
+public class KelolaPesananModel {
     private String Id;
     private String Customer;
     private String Detail;
@@ -9,11 +9,12 @@ public class AdminKelolaPesananModel {
     private String Order;
     private String Tanggal;
     private String Waktu;
+    private String TglOrder;
 
-    public AdminKelolaPesananModel() {
+    public KelolaPesananModel() {
     }
 
-    public AdminKelolaPesananModel(String id, String customer, String detail, String harga, String nama, String order, String tanggal, String waktu) {
+    public KelolaPesananModel(String id, String customer, String detail, String harga, String nama, String order, String tanggal, String waktu, String tgl_order) {
         Id = id;
         Customer = customer;
         Detail = detail;
@@ -22,6 +23,7 @@ public class AdminKelolaPesananModel {
         Order = order;
         Tanggal = tanggal;
         Waktu = waktu;
+        TglOrder = tgl_order;
     }
 
     public String getId() {
@@ -86,5 +88,13 @@ public class AdminKelolaPesananModel {
 
     public void setWaktu(String waktu) {
         Waktu = waktu;
+    }
+
+    public String getTglOrder() {
+        return TglOrder;
+    }
+
+    public void setTglOrder(String tgl_order) {
+        TglOrder = tgl_order;
     }
 }

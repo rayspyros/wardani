@@ -77,7 +77,7 @@ public class ProfileActivity extends AppCompatActivity {
         firestore = FirebaseFirestore.getInstance();
 
         nama = findViewById(R.id.profile_nama);
-        email = findViewById(R.id.profile_email);
+//        email = findViewById(R.id.profile_email);
         alamat = findViewById(R.id.profile_alamat);
         kota = findViewById(R.id.profile_kota);
         provinsi = findViewById(R.id.profile_prov);
@@ -106,7 +106,7 @@ public class ProfileActivity extends AppCompatActivity {
                             if (document.exists()) {
                                 // Mengisi otomatis EditText dengan data dari Firestore
                                 nama.setText(document.getString("nama"));
-                                email.setText(document.getString("email"));
+//                                email.setText(document.getString("email"));
                                 alamat.setText(document.getString("alamat"));
                                 kota.setText(document.getString("kota"));
                                 provinsi.setText(document.getString("provinsi"));
@@ -144,7 +144,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void simpanDataKeFirestore() {
         String namaText = nama.getText().toString();
-        String emailText = email.getText().toString();
+//        String emailText = email.getText().toString();
         String alamatText = alamat.getText().toString();
         String kotaText = kota.getText().toString();
         String provinsiText = provinsi.getText().toString();
@@ -155,7 +155,7 @@ public class ProfileActivity extends AppCompatActivity {
         firestore.collection("Pengguna").document(auth.getCurrentUser().getUid())
                 .update(
                         "nama", namaText,
-                        "email", emailText,
+//                        "email", emailText,
                         "alamat", alamatText,
                         "kota", kotaText,
                         "provinsi", provinsiText,
