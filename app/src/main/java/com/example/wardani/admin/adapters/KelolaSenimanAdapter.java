@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.wardani.R;
 import com.example.wardani.admin.activites.KelolaPesananActivity;
+import com.example.wardani.admin.models.KelolaCustomerModel;
 import com.example.wardani.admin.models.KelolaSenimanModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,6 +32,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +41,7 @@ public class KelolaSenimanAdapter extends RecyclerView.Adapter<KelolaSenimanAdap
 
     private Context context;
     private List<KelolaSenimanModel> kelolaSenimanModelList;
+    private List<KelolaSenimanModel> filteredSenimanList;
     private SharedPreferences sharedPreferences;
     public static final int PICK_IMAGE_REQUEST = 1;
     private Uri selectedImageUri;
@@ -46,6 +49,7 @@ public class KelolaSenimanAdapter extends RecyclerView.Adapter<KelolaSenimanAdap
     public KelolaSenimanAdapter(Context context, List<KelolaSenimanModel> kelolaSenimanModelList) {
         this.context = context;
         this.kelolaSenimanModelList = kelolaSenimanModelList;
+        this.filteredSenimanList = new ArrayList<>(kelolaSenimanModelList);
         this.sharedPreferences = context.getSharedPreferences("SwitchStatus", Context.MODE_PRIVATE);
     }
 
@@ -58,7 +62,7 @@ public class KelolaSenimanAdapter extends RecyclerView.Adapter<KelolaSenimanAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        KelolaSenimanModel item = kelolaSenimanModelList.get(position);
+        KelolaSenimanModel item = filteredSenimanList.get(position);
         holder.sNama.setText(item.getNama_dalang());
 
         // Set status switch berdasarkan nilai dari SharedPreferences
@@ -285,7 +289,12 @@ public class KelolaSenimanAdapter extends RecyclerView.Adapter<KelolaSenimanAdap
 
     @Override
     public int getItemCount() {
-        return kelolaSenimanModelList.size();
+        return filteredSenimanList.size();
+    }
+
+    public void filterList(List<KelolaSenimanModel> filteredList) {
+        filteredSenimanList = filteredList;
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -1,8 +1,11 @@
 package com.example.wardani.admin.activites;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +24,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class KelolaCustomerActivity extends AppCompatActivity {
@@ -30,6 +35,7 @@ public class KelolaCustomerActivity extends AppCompatActivity {
     private KelolaCustomerAdapter adapter;
     private List<KelolaCustomerModel> kelolaCustomerModelList;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private EditText searchCustomerEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +55,8 @@ public class KelolaCustomerActivity extends AppCompatActivity {
 
         recyclerViewCustomer = findViewById(R.id.recyclerViewCustomer);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        searchCustomerEditText = findViewById(R.id.search_customer);
+
         recyclerViewCustomer.setLayoutManager(new LinearLayoutManager(this));
         kelolaCustomerModelList = new ArrayList<>();
         adapter = new KelolaCustomerAdapter(this, kelolaCustomerModelList);
@@ -63,7 +71,25 @@ public class KelolaCustomerActivity extends AppCompatActivity {
                 loadDataFromFirestore();
             }
         });
+
+        // Tambahkan TextWatcher ke EditText untuk melakukan pencarian saat teks berubah
+        searchCustomerEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                filter(editable.toString());
+            }
+        });
+
+        // Menampilkan recyclerViewCustomer saat Activity pertama kali dibuka
+        recyclerViewCustomer.setVisibility(View.VISIBLE);
     }
+
 
     private void loadDataFromFirestore() {
         db.collection("Pengguna")
@@ -77,8 +103,17 @@ public class KelolaCustomerActivity extends AppCompatActivity {
                             KelolaCustomerModel customer = documentSnapshot.toObject(KelolaCustomerModel.class);
                             kelolaCustomerModelList.add(customer);
                         }
+                        // Mengurutkan daftar berdasarkan nama
+                        Collections.sort(kelolaCustomerModelList, new Comparator<KelolaCustomerModel>() {
+                            @Override
+                            public int compare(KelolaCustomerModel customer1, KelolaCustomerModel customer2) {
+                                return customer1.getNama().compareToIgnoreCase(customer2.getNama());
+                            }
+                        });
                         adapter.notifyDataSetChanged(); // Memperbarui RecyclerView setelah data dimuat
                         stopRefreshing(); // Hentikan refreshing setelah data dimuat
+                        // Menyaring dan menampilkan daftar saat pertama kali dibuka
+                        filter("");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -90,10 +125,27 @@ public class KelolaCustomerActivity extends AppCompatActivity {
                 });
     }
 
-
     private void stopRefreshing() {
         if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(false);
         }
+    }
+
+    // Method untuk melakukan filter berdasarkan input pengguna
+    private void filter(String text) {
+        List<KelolaCustomerModel> filteredCustomerList = new ArrayList<>();
+        if (text.isEmpty()) {
+            // Jika teks pencarian kosong, tampilkan semua item
+            filteredCustomerList.addAll(kelolaCustomerModelList);
+        } else {
+            // Jika tidak, filter daftar berdasarkan teks yang dimasukkan
+            for (KelolaCustomerModel item : kelolaCustomerModelList) {
+                if (item.getNama().toLowerCase().contains(text.toLowerCase())) {
+                    filteredCustomerList.add(item);
+                }
+            }
+        }
+        // Setelah memfilter, perbarui daftar yang ditampilkan di RecyclerView
+        adapter.filterList(filteredCustomerList);
     }
 }

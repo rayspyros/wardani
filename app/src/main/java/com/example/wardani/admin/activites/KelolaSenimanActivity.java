@@ -8,7 +8,9 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +28,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.wardani.R;
 import com.example.wardani.admin.adapters.KelolaSenimanAdapter;
+import com.example.wardani.admin.models.KelolaCustomerModel;
 import com.example.wardani.admin.models.KelolaSenimanModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -33,6 +36,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -47,6 +51,7 @@ public class KelolaSenimanActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private KelolaSenimanAdapter kelolaSenimanAdapter;
     private List<KelolaSenimanModel> kelolaSenimanModelList;
+    private EditText searchSenimanEditText;
     private FirebaseFirestore db;
     private ImageView imageView;
 
@@ -88,10 +93,28 @@ public class KelolaSenimanActivity extends AppCompatActivity {
         kelolaSenimanModelList = new ArrayList<>();
         kelolaSenimanAdapter = new KelolaSenimanAdapter(this, kelolaSenimanModelList);
         recyclerView.setAdapter(kelolaSenimanAdapter);
+        searchSenimanEditText = findViewById(R.id.search_kelola_seniman);
 
         db = FirebaseFirestore.getInstance();
 
         getDataFromFirestore();
+
+        // Tambahkan TextWatcher ke EditText untuk melakukan pencarian saat teks berubah
+        searchSenimanEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                filter(editable.toString());
+            }
+        });
+
+        // Menampilkan recyclerViewCustomer saat Activity pertama kali dibuka
+        recyclerView.setVisibility(View.VISIBLE);
     }
 
     private void tampilkanDialogTambahSeniman() {
@@ -187,6 +210,7 @@ public class KelolaSenimanActivity extends AppCompatActivity {
 
     private void getDataFromFirestore() {
         db.collection("ShowAll")
+                .orderBy("nama_dalang", Query.Direction.ASCENDING) // Mengurutkan data berdasarkan nama_dalang
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -199,12 +223,15 @@ public class KelolaSenimanActivity extends AppCompatActivity {
                                 kelolaSenimanModelList.add(kelolaSenimanModel);
                             }
                             kelolaSenimanAdapter.notifyDataSetChanged();
+                            // Menyaring dan menampilkan daftar saat pertama kali dibuka
+                            filter("");
                         } else {
                             Log.d("Firestore", "Error getting documents: ", task.getException());
                         }
                     }
                 });
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -219,5 +246,23 @@ public class KelolaSenimanActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    // Method untuk melakukan filter berdasarkan input pengguna
+    private void filter(String text) {
+        List<KelolaSenimanModel> filteredSenimanList = new ArrayList<>();
+        if (text.isEmpty()) {
+            // Jika teks pencarian kosong, tampilkan semua item
+            filteredSenimanList.addAll(kelolaSenimanModelList);
+        } else {
+            // Jika tidak, filter daftar berdasarkan teks yang dimasukkan
+            for (KelolaSenimanModel item : kelolaSenimanModelList) {
+                if (item.getNama_dalang().toLowerCase().contains(text.toLowerCase())) {
+                    filteredSenimanList.add(item);
+                }
+            }
+        }
+        // Setelah memfilter, perbarui daftar yang ditampilkan di RecyclerView
+        kelolaSenimanAdapter.filterList(filteredSenimanList);
     }
 }

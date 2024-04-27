@@ -114,8 +114,8 @@ public class SignUpActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(userTelepon)) {
             Toast.makeText(this, "Masukkan telepon anda!", Toast.LENGTH_SHORT).show();
             return;
-        } else if (userTelepon.length() < 10) {
-            Toast.makeText(this, "Nomor telepon terlalu pendek, masukkan minimal 10 angka", Toast.LENGTH_SHORT).show();
+        } else if (userTelepon.length() < 10 || userTelepon.length() > 12) {
+            Toast.makeText(this, "Nomor telepon harus memiliki 10 hingga 12 digit", Toast.LENGTH_SHORT).show();
             return;
         }
 

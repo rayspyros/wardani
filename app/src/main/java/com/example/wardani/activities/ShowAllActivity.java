@@ -32,7 +32,6 @@ public class ShowAllActivity extends AppCompatActivity {
     ShowAllAdapter showAllAdapter;
     List<ShowAllModel> showAllModelList;
     Toolbar toolbar;
-
     FirebaseFirestore firestore;
 
     @Override

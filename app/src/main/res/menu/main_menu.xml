@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/menu_admin"
-        android:title="Hubungi Kami"
+        android:title="Menu Admin"
         android:icon="@drawable/ic_admin"
         app:showAsAction="always"/>
 

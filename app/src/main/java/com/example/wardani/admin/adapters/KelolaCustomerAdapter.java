@@ -1,4 +1,5 @@
 package com.example.wardani.admin.adapters;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,15 +15,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.wardani.R;
 import com.example.wardani.admin.models.KelolaCustomerModel;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class KelolaCustomerAdapter extends RecyclerView.Adapter<KelolaCustomerAdapter.CustomerViewHolder> {
     private Context context;
     private List<KelolaCustomerModel> customerList;
+    private List<KelolaCustomerModel> filteredCustomerList;
 
     public KelolaCustomerAdapter(Context context, List<KelolaCustomerModel> customerList) {
         this.context = context;
         this.customerList = customerList;
+        this.filteredCustomerList = new ArrayList<>(customerList);
     }
 
     @NonNull
@@ -34,7 +39,7 @@ public class KelolaCustomerAdapter extends RecyclerView.Adapter<KelolaCustomerAd
 
     @Override
     public void onBindViewHolder(@NonNull CustomerViewHolder holder, int position) {
-        KelolaCustomerModel customer = customerList.get(position);
+        KelolaCustomerModel customer = filteredCustomerList.get(position);
         String alamatLengkap = customer.getAlamat() + ", " + customer.getKota() + ", " + customer.getProvinsi() + ", " + customer.getKodepos();
         holder.namaTextView.setText(customer.getNama());
         holder.emailTextView.setText(customer.getEmail());
@@ -50,7 +55,6 @@ public class KelolaCustomerAdapter extends RecyclerView.Adapter<KelolaCustomerAd
                 showConfirmationDialog(phoneNumber);
             }
         });
-
     }
 
     private void showConfirmationDialog(final String phoneNumber) {
@@ -84,10 +88,14 @@ public class KelolaCustomerAdapter extends RecyclerView.Adapter<KelolaCustomerAd
         context.startActivity(intent);
     }
 
-
     @Override
     public int getItemCount() {
-        return customerList.size();
+        return filteredCustomerList.size();
+    }
+
+    public void filterList(List<KelolaCustomerModel> filteredList) {
+        filteredCustomerList = filteredList;
+        notifyDataSetChanged();
     }
 
     public static class CustomerViewHolder extends RecyclerView.ViewHolder {
@@ -107,4 +115,3 @@ public class KelolaCustomerAdapter extends RecyclerView.Adapter<KelolaCustomerAd
         }
     }
 }
-

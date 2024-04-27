@@ -1,5 +1,6 @@
 package com.example.wardani.adapters;
 
+import static android.app.Activity.RESULT_OK;
 import static com.example.wardani.activities.HistoryActivity.PAYMENT_REQUEST_CODE;
 
 import android.app.Activity;
@@ -61,18 +62,66 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         holder.harga.setText("Rp." + historyModel.getHargaSeniman());
         holder.status.setText(historyModel.getStatus());
 
+        // Menyesuaikan warna teks sesuai dengan status pembayaran
+        if (historyModel.getStatus().equals("Belum Dibayar")) {
+            holder.status.setTextColor(context.getResources().getColor(R.color.red)); // Warna merah untuk status "Belum Dibayar"
+        } else if (historyModel.getStatus().equals("Sudah Dibayar")) {
+            holder.status.setTextColor(context.getResources().getColor(R.color.green)); // Warna hijau untuk status "Sudah Dibayar"
+        }
+
+        if (historyModel.getStatus().equals("Sudah Dibayar")) {
+            holder.bayarBtn.setVisibility(View.GONE); // Sembunyikan tombol bayar
+        } else {
+            holder.bayarBtn.setVisibility(View.VISIBLE); // Tampilkan tombol bayar untuk status lainnya
+        }
+
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd "+"/"+" HH:mm:ss", Locale.getDefault());
         Timestamp timestamp = historyModel.getTimeOrder();
         Date date = timestamp.toDate();
         String formattedDate = dateFormat.format(date);
         holder.order.setText(formattedDate);
 
-        holder.cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showCancelConfirmationDialog(position, historyModel.getDocumentId());
-            }
-        });
+        if (historyModel.getStatus().equals("Belum Dibayar")) {
+            holder.cancelBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showCancelConfirmationDialog(position, historyModel.getDocumentId());
+                }
+            });
+        } else if (historyModel.getStatus().equals("Sudah Dibayar")) {
+            holder.cancelBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Konfirmasi Pembatalan");
+                    builder.setMessage("Anda yakin ingin membatalkan pemesanan ini? jika iya, silahkan chat admin kami");
+                    builder.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Buka link WhatsApp untuk konfirmasi pembatalan setelah konfirmasi dialog
+                            String phoneNumber = "6281215409800"; // Nomor WhatsApp
+                            String message = "Permintaan pembatalan pesanan:\n" +
+                                    "Nama: " + historyModel.getNama() + "\n" +
+                                    "Tanggal: " + historyModel.getTanggal() + "\n" +
+                                    "Waktu: " + historyModel.getStartTime() + " - " + historyModel.getEndTime() + "\n" +
+                                    "Alamat: " + historyModel.getJalan() + ", " + historyModel.getKota() + ", " + historyModel.getProvinsi() + ", " + historyModel.getKodepos() + "\n" +
+                                    "Harga: Rp." + historyModel.getHargaSeniman() + "\n" +
+                                    "Order: " + holder.order.getText().toString();
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse("https://wa.me/" + phoneNumber + "/?text=" + Uri.encode(message)));
+                            context.startActivity(intent);
+                        }
+                    });
+                    builder.setNegativeButton("Tidak", null);
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            });
+
+        }
+
 
         holder.bayarBtn.setOnClickListener(new View.OnClickListener() {
             @Override
