@@ -13,6 +13,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.wardani.R;
 import com.example.wardani.adapters.ShowAllAdapter;
@@ -33,6 +34,7 @@ public class ShowAllActivity extends AppCompatActivity {
     List<ShowAllModel> showAllModelList;
     Toolbar toolbar;
     FirebaseFirestore firestore;
+    private boolean isSearchClicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,23 @@ public class ShowAllActivity extends AppCompatActivity {
         ImageButton btnKontak = findViewById(R.id.btn_kontakkami);
         ImageButton btnProfile = findViewById(R.id.btn_profile);
         ImageButton btnHistory = findViewById(R.id.btn_history);
+        ImageButton btnSearch = findViewById(R.id.btn_artist);
 
+        // Memeriksa apakah activity saat ini adalah ShowAllActivity
+        if (getClass().getSimpleName().equals("ShowAllActivity")) {
+            // Jika ya, maka atur latar belakang tombol "Home" menjadi putih
+            btnSearch.setBackgroundResource(R.drawable.white_rounded_corner);
+        }
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isSearchClicked) {
+                    isSearchClicked = true;
+                    Toast.makeText(ShowAllActivity.this, "Anda sudah di Halaman Seniman", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         btnKontak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

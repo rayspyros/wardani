@@ -33,6 +33,7 @@ public class ProfileActivity extends AppCompatActivity {
     EditText kodepos;
     EditText telepon;
     Button btn_simpan;
+    private boolean isProfileClicked = false;
 
     FirebaseFirestore firestore;
     FirebaseAuth auth;
@@ -47,7 +48,23 @@ public class ProfileActivity extends AppCompatActivity {
         ImageButton btnKontak = findViewById(R.id.btn_kontakkami);
         ImageButton btnSearch = findViewById(R.id.btn_artist);
         ImageButton btnHistory = findViewById(R.id.btn_history);
+        ImageButton btnProfile = findViewById(R.id.btn_profile);
 
+        // Memeriksa apakah activity saat ini adalah ProfileActivity
+        if (getClass().getSimpleName().equals("ProfileActivity")) {
+            // Jika ya, maka atur latar belakang tombol "Home" menjadi putih
+            btnProfile.setBackgroundResource(R.drawable.white_rounded_corner);
+        }
+
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isProfileClicked) {
+                    isProfileClicked = true;
+                    Toast.makeText(ProfileActivity.this, "Anda sudah di Halaman Profil", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

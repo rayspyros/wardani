@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private Fragment homeFragment;
     private FirebaseAuth auth;
     private Toolbar toolbar;
+    private boolean isHomeClicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,24 @@ public class MainActivity extends AppCompatActivity {
         ImageButton btnHome = findViewById(R.id.btn_home);
         ImageButton btnSearch = findViewById(R.id.btn_artist);
         ImageButton btnProfile = findViewById(R.id.btn_profile);
+
+        // Memeriksa apakah activity saat ini adalah MainActivity
+        if (getClass().getSimpleName().equals("MainActivity")) {
+            // Jika ya, maka atur latar belakang tombol "Home" menjadi putih
+            btnHome.setBackgroundResource(R.drawable.white_rounded_corner);
+        }
+
+        btnHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isHomeClicked) {
+                    // Jika tombol "Home" belum diklik sebelumnya, tandai bahwa tombol "Home" telah diklik
+                    isHomeClicked = true;
+                    // Tampilkan pesan toast "Anda sudah di Halaman Beranda"
+                    Toast.makeText(MainActivity.this, "Anda sudah di Halaman Beranda", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         btnKontak.setOnClickListener(new View.OnClickListener() {
             @Override

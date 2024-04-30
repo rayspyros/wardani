@@ -39,6 +39,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,6 +57,8 @@ public class KelolaSenimanActivity extends AppCompatActivity {
     private EditText searchSenimanEditText;
     private FirebaseFirestore db;
     private ImageView imageView;
+    private Uri imageUri;
+    private static final int PICK_IMAGE_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,29 +155,29 @@ public class KelolaSenimanActivity extends AppCompatActivity {
                     Toast.makeText(KelolaSenimanActivity.this, "Semua field harus diisi", Toast.LENGTH_SHORT).show();
                 } else {
                     int harga_jasa = Integer.parseInt(harga_jasa_str);
-                    tampilkanKonfirmasiTambahData(nama_dalang, harga_jasa, deskripsi, dialog);
+                    // Memanggil method untuk menampilkan konfirmasi dan unggah gambar ke Firebase Storage
+                    tampilkanKonfirmasiTambahData(nama_dalang, harga_jasa, deskripsi, imageUri, dialog);
                 }
             }
         });
     }
 
     private void pilihFoto() {
-        // Buat intent untuk memilih gambar dari galeri
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Pilih Foto"), PICK_IMAGE_REQUEST);
     }
 
-    private void tampilkanKonfirmasiTambahData(String nama_dalang, int harga_jasa, String deskripsi, AlertDialog dialog) {
+    private void tampilkanKonfirmasiTambahData(String nama_dalang, int harga_jasa, String deskripsi, Uri imageUri, AlertDialog dialog) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Konfirmasi");
         builder.setMessage("Apakah Anda yakin ingin menambahkan data seniman ini?");
         builder.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                tambahkanDataKeFirestore(nama_dalang, harga_jasa, deskripsi);
-                dialog.dismiss();
+                // Memanggil method untuk mengunggah gambar ke Firebase Storage
+                uploadImageToFirebaseStorage(imageUri, nama_dalang, harga_jasa, deskripsi, dialog);
             }
         });
         builder.setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
@@ -184,12 +189,40 @@ public class KelolaSenimanActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void tambahkanDataKeFirestore(String nama_dalang, int harga_jasa, String deskripsi) {
+    // Method untuk mengunggah gambar ke Firebase Storage
+    private void uploadImageToFirebaseStorage(Uri imageUri, String nama_dalang, int harga_jasa, String deskripsi, AlertDialog dialog) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("images/" + System.currentTimeMillis() + ".jpg");
+
+        storageRef.putFile(imageUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                String img_url = uri.toString();
+                                // Memanggil method untuk menambahkan data ke Firestore
+                                tambahkanDataKeFirestore(nama_dalang, harga_jasa, deskripsi, img_url, dialog);
+                            }
+                        });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(KelolaSenimanActivity.this, "Gagal mengunggah gambar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    // Method untuk menambahkan data ke Firestore
+    private void tambahkanDataKeFirestore(String nama_dalang, int harga_jasa, String deskripsi, String img_url, AlertDialog dialog) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> data = new HashMap<>();
         data.put("nama_dalang", nama_dalang);
         data.put("harga_jasa", harga_jasa);
         data.put("deskripsi", deskripsi);
+        data.put("img_url", img_url);
 
         db.collection("ShowAll")
                 .add(data)
@@ -233,14 +266,14 @@ public class KelolaSenimanActivity extends AppCompatActivity {
     }
 
 
+    // Method untuk onActivityResult untuk memproses gambar yang dipilih dari galeri
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri uri = data.getData();
+            imageUri = data.getData();
             try {
-                // Set gambar yang dipilih ke ImageView
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
                 imageView.setImageBitmap(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();

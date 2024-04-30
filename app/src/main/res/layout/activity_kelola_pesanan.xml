@@ -30,6 +30,22 @@
 <!--        app:layout_constraintEnd_toEndOf="parent"-->
 <!--        app:layout_constraintTop_toBottomOf="@+id/admin_kelola_pesanan" />-->
 
+    <EditText
+        android:id="@+id/search_pesanan"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/rounded_border"
+        android:hint="Cari"
+        android:inputType="text"
+        android:padding="12dp"
+        android:paddingEnd="48dp"
+        android:layout_margin="10dp"
+        android:textColorHint="@color/background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/admin_kelola_pesanan" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="0dp"
@@ -37,7 +53,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/admin_kelola_pesanan">
+        app:layout_constraintTop_toBottomOf="@id/search_pesanan">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewPesanan"

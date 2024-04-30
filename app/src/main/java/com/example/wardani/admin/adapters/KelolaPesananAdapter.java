@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.wardani.R;
+import com.example.wardani.admin.models.KelolaCustomerModel;
 import com.example.wardani.admin.models.KelolaPesananModel;
 
 import java.text.DateFormat;
@@ -73,6 +74,11 @@ public class KelolaPesananAdapter extends RecyclerView.Adapter<KelolaPesananAdap
             adminKelolaHarga = itemView.findViewById(R.id.admin_kelola_harga);
             adminKelolaTglOrder = itemView.findViewById(R.id.admin_tgl_order);
         }
+    }
+
+    public void filterList(List<KelolaPesananModel> filteredList) {
+        filteredPesananList = filteredList;
+        notifyDataSetChanged();
     }
 
     public void filterData(String filterOption) {

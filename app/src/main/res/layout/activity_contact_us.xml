@@ -56,54 +56,31 @@
                 android:textSize="20dp"/>
 
             <TextView
-                android:id="@+id/alamat1Kontak"
+                android:id="@+id/alamatKontak"
                 android:layout_width="match_parent"
-                android:layout_height="28dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ic_edit"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:text="Gg. TimasanDusun I, Makamhaji\nKec. Kartasura, Kab. Sukoharjo\nJawa Tengah\n57161"
+                android:lineSpacingExtra="4dp"
+                android:textColor="@android:color/black"
+                android:textSize="17dp"/>
+
+            <ImageView
+                android:id="@+id/ic_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/forwardKontak"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:text="Gg. TimasanDusun I, Makamhaji"
-                android:textColor="@android:color/black"
-                android:textSize="17dp"/>
-
-            <TextView
-                android:id="@+id/alamat2Kontak"
-                android:layout_width="match_parent"
-                android:layout_height="28dp"
-                android:layout_below="@id/alamat1Kontak"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:text="Kec. Kartasura, Kab. Sukoharjo"
-                android:textColor="@android:color/black"
-                android:textSize="17dp"/>
-
-            <TextView
-                android:id="@+id/alamat3Kontak"
-                android:layout_width="match_parent"
-                android:layout_height="28dp"
-                android:layout_below="@id/alamat2Kontak"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:text="Jawa Tengah"
-                android:textColor="@android:color/black"
-                android:textSize="17dp"/>
-
-            <TextView
-                android:id="@+id/alamat4Kontak"
-                android:layout_width="match_parent"
-                android:layout_height="28dp"
-                android:layout_below="@id/alamat3Kontak"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:text="57161"
-                android:textColor="@android:color/black"
-                android:textSize="17dp"/>
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/ic_edit" />
 
             <TextView
                 android:id="@+id/followKontak"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
-                android:layout_below="@id/alamat4Kontak"
+                android:layout_below="@id/alamatKontak"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"

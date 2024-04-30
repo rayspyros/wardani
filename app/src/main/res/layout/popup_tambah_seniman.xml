@@ -43,7 +43,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/pp_harga_jasa"
         android:hint="Deskripsi Seniman"
-        android:inputType="text"/>
+        android:inputType="textMultiLine"
+        android:minLines="4"
+        android:gravity="top|start"
+        android:layout_marginTop="8dp"
+        android:padding="8dp"/>
 
     <Button
         android:id="@+id/btn_tambah"

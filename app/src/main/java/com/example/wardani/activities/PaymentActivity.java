@@ -88,7 +88,7 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
             textViewTanggal.setText(tanggal);
             textViewWaktu.setText(waktu);
             textViewDetail.setText(detail);
-            textViewHarga.setText("Rp. "+harga);
+            textViewHarga.setText("Rp. " + harga);
             textViewOrder.setText(pesanan);
             textViewStatus.setText(status);
         }
@@ -97,7 +97,7 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
         initMidtransSdk();
     }
 
-    private void iniBindViews(){
+    private void iniBindViews() {
         // Inisialisasi TextView untuk menampilkan data
         textViewNama = findViewById(R.id.payment_nama);
         textViewCustomer = findViewById(R.id.payment_customer);
@@ -137,7 +137,7 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
         return mCustomerDetails;
     }
 
-    private ShippingAddress shippingAddress(){
+    private ShippingAddress shippingAddress() {
         ShippingAddress shippingAddressNew = new ShippingAddress();
         shippingAddressNew.setAddress(address);
         return shippingAddressNew;
@@ -165,18 +165,18 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
                     // Mengubah status di Firebase Firestore
                     ubahStatusPesanan(auth.getCurrentUser().getUid(), id_item);
                     // Menampilkan pesan transaksi berhasil
-                    Toast.makeText(this, "Transaction Finished. ID: " + result.getResponse().getTransactionId(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Pembayaran Berhasil. ID: " + result.getResponse().getTransactionId(), Toast.LENGTH_LONG).show();
                     setResultAndFinish("Sudah Dibayar");
                     break;
                 case TransactionResult.STATUS_PENDING:
-                    Toast.makeText(this, "Transaction Pending. ID: " + result.getResponse().getTransactionId(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Pembayaran Pending. ID: " + result.getResponse().getTransactionId(), Toast.LENGTH_LONG).show();
                     break;
                 case TransactionResult.STATUS_FAILED:
-                    Toast.makeText(this, "Transaction Failed. ID: " + result.getResponse().getTransactionId() + ". Message: " + result.getResponse().getStatusMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Pembayaran Gagal. ID: " + result.getResponse().getTransactionId() + ". Message: " + result.getResponse().getStatusMessage(), Toast.LENGTH_LONG).show();
                     break;
             }
         } else if (result.isTransactionCanceled()) {
-            Toast.makeText(this, "Transaction Canceled", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Pembayaran Dibatalkan", Toast.LENGTH_LONG).show();
         } else {
             if (result.getStatus().equalsIgnoreCase(TransactionResult.STATUS_INVALID)) {
                 Toast.makeText(this, "Transaction Invalid", Toast.LENGTH_LONG).show();
@@ -185,7 +185,6 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
             }
         }
     }
-
 
 
     private void initActionButtons() {
@@ -219,10 +218,10 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
             firestore.collection("Riwayat")
                     .add(pesanan)
                     .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(PaymentActivity.this, "Pesanan berhasil disimpan dalam riwayat", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(PaymentActivity.this, "Pesanan berhasil disimpan dalam riwayat", Toast.LENGTH_SHORT).show();
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(PaymentActivity.this, "Gagal menyimpan pesanan dalam riwayat", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(PaymentActivity.this, "Gagal menyimpan pesanan dalam riwayat", Toast.LENGTH_SHORT).show();
                     });
         }
     }
@@ -242,11 +241,12 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
                     Toast.makeText(this, "Gagal memperbarui status pesanan", Toast.LENGTH_SHORT).show();
                 });
     }
+
     private void setResultAndFinish(String updatedStatus) {
         // Mengirim status pembayaran yang diperbarui kembali ke HistoryActivity
         Intent resultIntent = new Intent();
         resultIntent.putExtra("UPDATED_STATUS", updatedStatus);
         setResult(RESULT_OK, resultIntent);
-        finish();
+        finish(); // Menutup PaymentActivity dan kembali ke HistoryActivity
     }
 }

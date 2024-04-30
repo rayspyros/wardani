@@ -126,7 +126,7 @@ public class KelolaSenimanAdapter extends RecyclerView.Adapter<KelolaSenimanAdap
         pp2Deskripsi.setText(item.getDeskripsi());
 
         // Menampilkan gambar dari URL menggunakan Glide
-        String imageUrl = item.getImg_url() + ".png"; // Menambahkan ekstensi .png ke URL gambar
+        String imageUrl = item.getImg_url(); // URL gambar
         Glide.with(context)
                 .load(imageUrl)
                 .into(iv2_gambar);

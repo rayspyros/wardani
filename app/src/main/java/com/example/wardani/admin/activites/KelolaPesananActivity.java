@@ -1,7 +1,10 @@
 package com.example.wardani.admin.activites;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -13,6 +16,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.wardani.R;
 import com.example.wardani.admin.adapters.KelolaPesananAdapter;
+import com.example.wardani.admin.models.KelolaCustomerModel;
 import com.example.wardani.admin.models.KelolaPesananModel;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -26,6 +30,7 @@ public class KelolaPesananActivity extends AppCompatActivity {
     private KelolaPesananAdapter adapter;
     private List<KelolaPesananModel> pesananList;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private EditText searchPesananEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,8 @@ public class KelolaPesananActivity extends AppCompatActivity {
 
         recyclerViewPesanan = findViewById(R.id.recyclerViewPesanan);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        searchPesananEditText = findViewById(R.id.search_pesanan);
+
         recyclerViewPesanan.setLayoutManager(new LinearLayoutManager(this));
         pesananList = new ArrayList<>();
         adapter = new KelolaPesananAdapter(this, pesananList, swipeRefreshLayout);
@@ -64,6 +71,21 @@ public class KelolaPesananActivity extends AppCompatActivity {
                 loadDataFromFirestore();
             }
         });
+
+        // Tambahkan TextWatcher ke EditText untuk melakukan pencarian saat teks berubah
+        searchPesananEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                filter(editable.toString());
+            }
+        });
+
     }
 
     private void loadDataFromFirestore() {
@@ -104,6 +126,25 @@ public class KelolaPesananActivity extends AppCompatActivity {
             filterData(selectedOption);
         });
         builder.show();
+    }
+
+    // Method untuk melakukan filter berdasarkan input pengguna
+    private void filter(String text) {
+        List<KelolaPesananModel> filteredPesananList = new ArrayList<>();
+        if (text.isEmpty()) {
+            // Jika teks pencarian kosong, tampilkan semua item
+            filteredPesananList.addAll(pesananList);
+        } else {
+            // Jika tidak, filter daftar berdasarkan teks yang dimasukkan
+            for (KelolaPesananModel item : pesananList) {
+                if (item.getNama().toLowerCase().contains(text.toLowerCase()) ||
+                        item.getCustomer().toLowerCase().contains(text.toLowerCase())) {
+                    filteredPesananList.add(item);
+                }
+            }
+        }
+        // Setelah memfilter, perbarui daftar yang ditampilkan di RecyclerView
+        adapter.filterList(filteredPesananList);
     }
 
     private void filterData(String filterOption) {
