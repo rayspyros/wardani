@@ -80,32 +80,4 @@ public class KelolaPesananAdapter extends RecyclerView.Adapter<KelolaPesananAdap
         filteredPesananList = filteredList;
         notifyDataSetChanged();
     }
-
-    public void filterData(String filterOption) {
-        filteredPesananList.clear();
-        filteredPesananList.addAll(pesananList); // Reset filtered list to original list
-
-        // Sorting the filtered list based on order date
-        Collections.sort(filteredPesananList, new Comparator<KelolaPesananModel>() {
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-
-            @Override
-            public int compare(KelolaPesananModel o1, KelolaPesananModel o2) {
-                try {
-                    Date orderDate1 = dateFormat.parse(o1.getOrder());
-                    Date orderDate2 = dateFormat.parse(o2.getOrder());
-                    if (filterOption.equals("terbaru")) {
-                        return orderDate2.compareTo(orderDate1);
-                    } else { // For "terlama"
-                        return orderDate1.compareTo(orderDate2);
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    return 0;
-                }
-            }
-        });
-
-        notifyDataSetChanged(); // Notify adapter about the changes
-    }
 }

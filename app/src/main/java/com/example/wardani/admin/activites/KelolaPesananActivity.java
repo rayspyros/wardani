@@ -60,11 +60,6 @@ public class KelolaPesananActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         loadDataFromFirestore();
 
-//        Button btnFilter = findViewById(R.id.btnFilter);
-//        btnFilter.setOnClickListener(v -> {
-//            showFilterDialog();
-//        });
-
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -101,8 +96,9 @@ public class KelolaPesananActivity extends AppCompatActivity {
                         pesananList.add(model);
                     }
                     adapter.notifyDataSetChanged(); // Tambahkan ini untuk memperbarui tampilan
-                    adapter.filterData("terbaru"); // Panggil filterData dengan opsi "terbaru"
                     stopRefreshing(); // Berhenti menyegarkan ketika data dimuat
+                    // Menyaring dan menampilkan daftar saat pertama kali dibuka
+                    filter("");
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(KelolaPesananActivity.this, "Gagal memuat data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -115,17 +111,6 @@ public class KelolaPesananActivity extends AppCompatActivity {
         if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(false);
         }
-    }
-
-    private void showFilterDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Pilih Filter");
-        String[] filterOptions = {"Terbaru", "Terlama"};
-        builder.setItems(filterOptions, (dialog, which) -> {
-            String selectedOption = filterOptions[which].toLowerCase(); // Mengubah pilihan ke huruf kecil
-            filterData(selectedOption);
-        });
-        builder.show();
     }
 
     // Method untuk melakukan filter berdasarkan input pengguna
@@ -145,9 +130,5 @@ public class KelolaPesananActivity extends AppCompatActivity {
         }
         // Setelah memfilter, perbarui daftar yang ditampilkan di RecyclerView
         adapter.filterList(filteredPesananList);
-    }
-
-    private void filterData(String filterOption) {
-        adapter.filterData(filterOption);
     }
 }
