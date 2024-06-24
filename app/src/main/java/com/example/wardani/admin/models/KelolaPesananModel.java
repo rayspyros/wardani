@@ -8,13 +8,14 @@ public class KelolaPesananModel {
     private String Nama;
     private String Order;
     private String Tanggal;
+    private String Status;
     private String Waktu;
     private String TglOrder;
 
     public KelolaPesananModel() {
     }
 
-    public KelolaPesananModel(String id, String customer, String detail, String harga, String nama, String order, String tanggal, String waktu, String tgl_order) {
+    public KelolaPesananModel(String id, String customer, String detail, String harga, String nama, String order, String tanggal, String status, String waktu, String tglOrder) {
         Id = id;
         Customer = customer;
         Detail = detail;
@@ -22,8 +23,9 @@ public class KelolaPesananModel {
         Nama = nama;
         Order = order;
         Tanggal = tanggal;
+        Status = status;
         Waktu = waktu;
-        TglOrder = tgl_order;
+        TglOrder = tglOrder;
     }
 
     public String getId() {
@@ -82,6 +84,14 @@ public class KelolaPesananModel {
         Tanggal = tanggal;
     }
 
+    public String getStatus() {
+        return Status;
+    }
+
+    public void setStatus(String status) {
+        Status = status;
+    }
+
     public String getWaktu() {
         return Waktu;
     }
@@ -94,7 +104,7 @@ public class KelolaPesananModel {
         return TglOrder;
     }
 
-    public void setTglOrder(String tgl_order) {
-        TglOrder = tgl_order;
+    public void setTglOrder(String tglOrder) {
+        TglOrder = tglOrder;
     }
 }

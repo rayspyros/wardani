@@ -1,52 +1,55 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="@color/white">
+    android:fillViewport="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:background="@color/white">
 
         <ImageView
-            android:id="@+id/iv_gambar"
-            android:layout_width="80dp"
-            android:layout_height="100dp"
+            android:id="@+id/iv_gambar_berita"
+            android:layout_width="240dp"
+            android:layout_height="120dp"
             android:layout_marginBottom="16dp"
             android:src="@drawable/placeholder_img"
             android:layout_centerHorizontal="true"
             android:scaleType="centerCrop"/>
 
         <Button
-            android:id="@+id/btn_pilih_foto"
+            android:id="@+id/btn_pilih_foto_berita"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/iv_gambar"
+            android:layout_below="@id/iv_gambar_berita"
             android:layout_centerHorizontal="true"
             android:text="Pilih Foto"/>
 
         <EditText
-            android:id="@+id/pp_nama_dalang"
+            android:id="@+id/pp_judul_berita"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/btn_pilih_foto"
-            android:hint="Nama Seniman"
+            android:layout_below="@id/btn_pilih_foto_berita"
+            android:hint="Judul Berita"
             android:inputType="text"/>
 
-        <EditText
-            android:id="@+id/pp_harga_jasa"
+        <TextView
+            android:id="@+id/pp_waktu_upload"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/pp_nama_dalang"
-            android:hint="Harga Seniman"
-            android:inputType="number"/>
+            android:layout_below="@id/pp_judul_berita"
+            android:textSize="18sp"
+            android:hint="Tanggal Unggah"
+            android:background="?android:attr/editTextBackground"
+            android:padding="8dp"/>
 
         <EditText
-            android:id="@+id/pp_deskripsi"
+            android:id="@+id/pp_deskripsi_berita"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/pp_harga_jasa"
-            android:hint="Deskripsi Seniman"
+            android:layout_below="@id/pp_waktu_upload"
+            android:hint="Deskripsi Berita"
             android:inputType="textMultiLine"
             android:minLines="4"
             android:gravity="top|start"
@@ -54,11 +57,12 @@
             android:padding="8dp"/>
 
         <Button
-            android:id="@+id/btn_tambah"
+            android:id="@+id/btn_tambah_pp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/pp_deskripsi"
+            android:layout_below="@id/pp_deskripsi_berita"
             android:layout_marginTop="16dp"
             android:text="Tambah"/>
+
     </RelativeLayout>
 </ScrollView>

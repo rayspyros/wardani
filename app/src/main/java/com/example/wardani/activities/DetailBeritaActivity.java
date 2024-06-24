@@ -1,6 +1,9 @@
 package com.example.wardani.activities;
 
+import android.graphics.text.LineBreaker;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,6 +36,12 @@ public class DetailBeritaActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.detail_berita_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // Justify text if API level is 26 or higher
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            TextView detailDeskripsi = findViewById(R.id.detail_bDeskripsi);
+            detailDeskripsi.setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD);
+        }
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

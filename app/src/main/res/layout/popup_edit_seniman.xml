@@ -1,60 +1,64 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:padding="16dp"
     android:background="@color/white">
 
-    <ImageView
-        android:id="@+id/iv2_gambar"
-        android:layout_width="80dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="16dp"
-        android:src="@drawable/placeholder_img"
-        android:layout_centerHorizontal="true"
-        android:scaleType="centerCrop"/>
-
-    <Button
-        android:id="@+id/btn2_pilih_foto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/iv2_gambar"
-        android:layout_centerHorizontal="true"
-        android:text="Pilih Foto"/>
-
-    <EditText
-        android:id="@+id/pp2_nama_dalang"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/btn2_pilih_foto"
-        android:hint="Nama Seniman"
-        android:inputType="text"/>
+        android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/pp2_harga_jasa"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/pp2_nama_dalang"
-        android:hint="Harga Seniman"
-        android:inputType="number"/>
+        <ImageView
+            android:id="@+id/iv2_gambar"
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/placeholder_img"
+            android:layout_centerHorizontal="true"
+            android:scaleType="centerCrop"/>
 
-    <EditText
-        android:id="@+id/pp2_deskripsi"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/pp2_harga_jasa"
-        android:hint="Deskripsi Seniman"
-        android:inputType="textMultiLine"
-        android:minLines="4"
-        android:gravity="top|start"
-        android:layout_marginTop="8dp"
-        android:padding="8dp"/>
+        <Button
+            android:id="@+id/btn2_pilih_foto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv2_gambar"
+            android:layout_centerHorizontal="true"
+            android:text="Pilih Foto"/>
 
-    <Button
-        android:id="@+id/btn_simpan"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/pp2_deskripsi"
-        android:layout_marginTop="16dp"
-        android:text="Simpan"/>
+        <EditText
+            android:id="@+id/pp2_nama_dalang"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn2_pilih_foto"
+            android:hint="Nama Seniman"
+            android:inputType="text"/>
 
-</RelativeLayout>
+        <EditText
+            android:id="@+id/pp2_harga_jasa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pp2_nama_dalang"
+            android:hint="Harga Seniman"
+            android:inputType="number"/>
+
+        <EditText
+            android:id="@+id/pp2_deskripsi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pp2_harga_jasa"
+            android:hint="Deskripsi Seniman"
+            android:inputType="textMultiLine"
+            android:minLines="4"
+            android:gravity="top|start"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"/>
+
+        <Button
+            android:id="@+id/btn_simpan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pp2_deskripsi"
+            android:layout_marginTop="16dp"
+            android:text="Simpan"/>
+    </RelativeLayout>
+</ScrollView>

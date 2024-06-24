@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser != null && currentUser.getEmail().equals("adminwardani123@gmail.com")) {
             adminMenuItem.setVisible(true);
             logoutMenuItem.setVisible(true);
-            addedMenuItem.setVisible(false);
+            addedMenuItem.setVisible(true);
         } else {
             adminMenuItem.setVisible(false);
         }

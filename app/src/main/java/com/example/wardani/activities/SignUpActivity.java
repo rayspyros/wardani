@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -50,6 +52,49 @@ public class SignUpActivity extends AppCompatActivity {
         // Set EditText pos and telepon to accept only numbers
         pos.setInputType(InputType.TYPE_CLASS_NUMBER);
         telepon.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+        // Add TextWatcher for capitalization
+        addTextWatcher(nama);
+        addTextWatcher(jalan);
+        addTextWatcher(kota);
+        addTextWatcher(provinsi);
+    }
+
+    private void addTextWatcher(EditText editText) {
+        editText.addTextChangedListener(new TextWatcher() {
+            boolean isUpdating = false;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isUpdating) {
+                    isUpdating = false;
+                    return;
+                }
+                isUpdating = true;
+                StringBuilder newText = new StringBuilder();
+                boolean capitalizeNext = true;
+                for (int i = 0; i < s.length(); i++) {
+                    char c = s.charAt(i);
+                    if (capitalizeNext && Character.isLetter(c)) {
+                        newText.append(Character.toUpperCase(c));
+                        capitalizeNext = false;
+                    } else {
+                        newText.append(c);
+                    }
+                    if (Character.isWhitespace(c)) {
+                        capitalizeNext = true;
+                    }
+                }
+                editText.setText(newText.toString());
+                editText.setSelection(editText.getText().length());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
     }
 
     public void signup(View view){
@@ -114,8 +159,8 @@ public class SignUpActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(userTelepon)) {
             Toast.makeText(this, "Masukkan telepon anda!", Toast.LENGTH_SHORT).show();
             return;
-        } else if (userTelepon.length() < 10 || userTelepon.length() > 12) {
-            Toast.makeText(this, "Nomor telepon harus memiliki 10 hingga 12 digit", Toast.LENGTH_SHORT).show();
+        } else if (userTelepon.length() < 10 || userTelepon.length() > 13) {
+            Toast.makeText(this, "Nomor telepon harus memiliki 10 hingga 13 digit", Toast.LENGTH_SHORT).show();
             return;
         }
 

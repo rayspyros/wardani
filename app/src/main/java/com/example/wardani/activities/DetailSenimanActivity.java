@@ -26,7 +26,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class DetailSenimanActivity extends AppCompatActivity {
 
@@ -84,12 +86,15 @@ public class DetailSenimanActivity extends AppCompatActivity {
         tambahSimpan = findViewById(R.id.tambah_seniman);
         pesanSekarang = findViewById(R.id.pesan_sekarang);
 
+        // Format angka menjadi "1.000.000"
+        NumberFormat formatter = NumberFormat.getInstance(new Locale("id", "ID"));
+
         //Seniman
         if (senimanModel != null) {
             Glide.with(getApplicationContext()).load(senimanModel.getImg_url()).into(sImage);
             nama.setText(senimanModel.getNama_dalang());
             deskripsi.setText(senimanModel.getDeskripsi());
-            harga.setText(String.valueOf(senimanModel.getHarga_jasa()));
+            harga.setText(formatter.format(senimanModel.getHarga_jasa()));
 
             totalHarga = senimanModel.getHarga_jasa();
         }
@@ -99,7 +104,7 @@ public class DetailSenimanActivity extends AppCompatActivity {
             Glide.with(getApplicationContext()).load(showAllModel.getImg_url()).into(sImage);
             nama.setText(showAllModel.getNama_dalang());
             deskripsi.setText(showAllModel.getDeskripsi());
-            harga.setText(String.valueOf(showAllModel.getHarga_jasa()));
+            harga.setText(formatter.format(showAllModel.getHarga_jasa()));
 
             totalHarga = showAllModel.getHarga_jasa();
         }
@@ -165,7 +170,13 @@ public class DetailSenimanActivity extends AppCompatActivity {
             // Pastikan pengguna sudah login sebelum menambahkan ke daftar favorit
 
             final String senimanNama = nama.getText().toString();
-            final int senimanHarga = Integer.parseInt(harga.getText().toString());
+            final String hargaText = harga.getText().toString();
+
+            // Remove formatting (commas and periods) from hargaText
+            String hargaCleaned = hargaText.replaceAll("[.,\\s]", "");
+
+            // Parse the cleaned string to integer
+            final int senimanHarga = Integer.parseInt(hargaCleaned);
 
             firestore.collection("Simpan").document(auth.getCurrentUser().getUid())
                     .collection("User").document(senimanNama).get()
@@ -212,4 +223,5 @@ public class DetailSenimanActivity extends AppCompatActivity {
             startActivity(new Intent(DetailSenimanActivity.this, LoginActivity.class));
         }
     }
+
 }

@@ -76,7 +76,6 @@ public class AddedAdapter extends RecyclerView.Adapter<AddedAdapter.ViewHolder> 
         AddedModel addedModel = list.get(position);
 
         holder.nama.setText(addedModel.getSenimanNama());
-        holder.harga.setText(String.valueOf(addedModel.getSenimanHarga()));
 
         holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,7 +131,6 @@ public class AddedAdapter extends RecyclerView.Adapter<AddedAdapter.ViewHolder> 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             nama = itemView.findViewById(R.id.added_nama);
-            harga = itemView.findViewById(R.id.added_harga);
             deleteBtn = itemView.findViewById(R.id.btn_hapus);
             lihatBtn = itemView.findViewById(R.id.btn_lihat);
         }

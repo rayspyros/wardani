@@ -22,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
 
     EditText email, password;
     private FirebaseAuth auth;
+    private static final String ADMIN_EMAIL = "adminwardani123@gmail.com";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +31,13 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-        if (auth.getCurrentUser() != null){
-            startActivity(new Intent(LoginActivity.this,MainActivity.class));
+        if (auth.getCurrentUser() != null) {
+            String currentUserEmail = auth.getCurrentUser().getEmail();
+            if (ADMIN_EMAIL.equals(currentUserEmail)) {
+                startActivity(new Intent(LoginActivity.this, AdminActivity.class));
+            } else {
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            }
             finish();
         }
 
@@ -43,33 +49,37 @@ public class LoginActivity extends AppCompatActivity {
         String userEmail = email.getText().toString();
         String userPassword = password.getText().toString();
 
-        if(TextUtils.isEmpty(userEmail)){
+        if (TextUtils.isEmpty(userEmail)) {
             Toast.makeText(this, "Masukkan username anda!", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(userPassword)){
+        if (TextUtils.isEmpty(userPassword)) {
             Toast.makeText(this, "Masukkan password anda!", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(userPassword.length() < 6){
+        if (userPassword.length() < 6) {
             Toast.makeText(this, "Password anda terlalu pendek, masukkan minimal 6 karakter!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        auth.signInWithEmailAndPassword(userEmail,userPassword)
-                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-
-                                if(task.isSuccessful()){
-                                    Toast.makeText(LoginActivity.this, "Berhasil Masuk", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(LoginActivity.this,MainActivity.class));
-                                }else {
-                                    Toast.makeText(LoginActivity.this, "Gagal Masuk"+task.getException(), Toast.LENGTH_SHORT).show();
-                                }
-
+        auth.signInWithEmailAndPassword(userEmail, userPassword)
+                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(LoginActivity.this, "Berhasil Masuk", Toast.LENGTH_SHORT).show();
+                            String currentUserEmail = auth.getCurrentUser().getEmail();
+                            if (ADMIN_EMAIL.equals(currentUserEmail)) {
+                                startActivity(new Intent(LoginActivity.this, AdminActivity.class));
+                            } else {
+                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             }
-                        });
+                            finish();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Gagal Masuk, Periksa Kembali Email dan Password Anda! ", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     public void signup(View view) {

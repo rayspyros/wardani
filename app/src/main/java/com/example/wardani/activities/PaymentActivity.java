@@ -27,8 +27,10 @@ import com.midtrans.sdk.corekit.models.snap.Shopeepay;
 import com.midtrans.sdk.corekit.models.snap.TransactionResult;
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class PaymentActivity extends AppCompatActivity implements TransactionFinishedCallback {
@@ -82,13 +84,17 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
             order = pesanan;
             price = Double.valueOf(harga);
 
+            // Format harga to currency
+            NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("id", "ID"));
+            String formattedPrice = currencyFormat.format(price);
+
             // Set data ke TextView
             textViewNama.setText(nama);
             textViewCustomer.setText(pemesan);
             textViewTanggal.setText(tanggal);
             textViewWaktu.setText(waktu);
             textViewDetail.setText(detail);
-            textViewHarga.setText("Rp. " + harga);
+            textViewHarga.setText("Rp. " + formattedPrice);
             textViewOrder.setText(pesanan);
             textViewStatus.setText(status);
         }
@@ -213,6 +219,7 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
             pesanan.put("harga", harga);
             pesanan.put("order", order);
             pesanan.put("tgl_order", tglOrder); // Menambahkan tgl_order ke dalam Map
+            pesanan.put("status", "Belum Selesai");
 
             // Menyimpan data pesanan ke koleksi "Riwayat" di Firestore
             firestore.collection("Riwayat")

@@ -16,8 +16,10 @@ import com.example.wardani.R;
 import com.example.wardani.activities.DetailSenimanActivity;
 import com.example.wardani.models.ShowAllModel;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ShowAllAdapter extends RecyclerView.Adapter<ShowAllAdapter.ViewHolder> {
 
@@ -41,7 +43,12 @@ public class ShowAllAdapter extends RecyclerView.Adapter<ShowAllAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ShowAllModel item = filteredList.get(position);
         Glide.with(context).load(item.getImg_url()).into(holder.sItemImage);
-        holder.sHarga.setText("Rp "+ item.getHarga_jasa());
+
+        // Menggunakan NumberFormat untuk mengubah harga menjadi format IDR dengan pemisah ribuan
+        NumberFormat numberFormat = NumberFormat.getInstance(new Locale("id", "ID"));
+        String formattedHarga = numberFormat.format(item.getHarga_jasa());
+
+        holder.sHarga.setText("Rp " + formattedHarga);
         holder.sNama.setText(item.getNama_dalang());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

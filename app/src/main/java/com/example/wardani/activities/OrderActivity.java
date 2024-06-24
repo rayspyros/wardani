@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -45,6 +46,7 @@ import com.midtrans.sdk.uikit.SdkUIFlowBuilder;
 import com.midtrans.sdk.uikit.api.model.BankType;
 import com.midtrans.sdk.uikit.external.UiKitApi;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -67,6 +69,7 @@ public class OrderActivity extends AppCompatActivity {
     private EditText startTimeEditText, endTimeEditText;
     FirebaseFirestore firestore;
     FirebaseAuth auth;
+    CheckBox checkBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,12 +103,10 @@ public class OrderActivity extends AppCompatActivity {
         startTimeEditText = findViewById(R.id.etStartTime);
         endTimeEditText = findViewById(R.id.etEndTime);
         bayarBtn = findViewById(R.id.now_bayar);
+        checkBox = findViewById(R.id.checkBox);
 
         // Mengambil data dari Firestore dan mengisi otomatis EditText
         getDataFromFirestore();
-
-        // Panggil initMidTransSDK() di dalam onCreate() sebelum menggunakan bayarBtn
-//        initMidTransSDK();
 
         bayarBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,10 +122,14 @@ public class OrderActivity extends AppCompatActivity {
                 String startTime = startTimeEditText.getText().toString();
                 String endTime = endTimeEditText.getText().toString();
 
-                // Memastikan semua field telah diisi
+                /// Memastikan semua field telah diisi
                 if (!userNama.isEmpty() && !userEmail.isEmpty() && !userJalan.isEmpty() && !userKota.isEmpty() && !userProvinsi.isEmpty() && !userKode.isEmpty() && !userTelepon.isEmpty() && !userTanggal.isEmpty() && !startTime.isEmpty() && !endTime.isEmpty()) {
-                    // Menampilkan dialog konfirmasi
-                    showConfirmationDialog();
+                    if (checkBox.isChecked()) { // Tambahkan validasi checkbox
+                        // Menampilkan dialog konfirmasi
+                        showConfirmationDialog();
+                    } else {
+                        Toast.makeText(OrderActivity.this, "Silahkan centang kotak konfirmasi!", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(OrderActivity.this, "Silahkan isi semua data!", Toast.LENGTH_SHORT).show();
                 }

@@ -91,8 +91,10 @@ public class KelolaPesananActivity extends AppCompatActivity {
                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         // Ambil data tgl_order secara eksplisit dari documentSnapshot
                         String tglOrder = documentSnapshot.getString("tgl_order");
+                        String id = documentSnapshot.getId(); // Ambil ID dari dokumen
                         KelolaPesananModel model = documentSnapshot.toObject(KelolaPesananModel.class);
                         model.setTglOrder(tglOrder); // Atur tglOrder ke dalam objek model
+                        model.setId(id); // Atur ID ke dalam objek model
                         pesananList.add(model);
                     }
                     adapter.notifyDataSetChanged(); // Tambahkan ini untuk memperbarui tampilan
@@ -105,7 +107,6 @@ public class KelolaPesananActivity extends AppCompatActivity {
                     stopRefreshing(); // Berhenti menyegarkan jika ada kegagalan
                 });
     }
-
 
     private void stopRefreshing() {
         if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
@@ -123,6 +124,7 @@ public class KelolaPesananActivity extends AppCompatActivity {
             // Jika tidak, filter daftar berdasarkan teks yang dimasukkan
             for (KelolaPesananModel item : pesananList) {
                 if (item.getNama().toLowerCase().contains(text.toLowerCase()) ||
+                        item.getStatus().toLowerCase().contains(text.toLowerCase()) ||
                         item.getCustomer().toLowerCase().contains(text.toLowerCase())) {
                     filteredPesananList.add(item);
                 }

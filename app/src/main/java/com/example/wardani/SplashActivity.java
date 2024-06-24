@@ -19,7 +19,7 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         audio = MediaPlayer.create(this, R.raw.sound);
-        audio.setVolume(1,1);
+        audio.setVolume(0.5f,0.5f);
         audio.start();
 
         new Handler().postDelayed(new Runnable() {
