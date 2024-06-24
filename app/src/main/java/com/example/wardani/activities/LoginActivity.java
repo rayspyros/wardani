@@ -1,8 +1,10 @@
 package com.example.wardani.activities;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.SignInMethodQueryResult;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -62,6 +65,38 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        auth.fetchSignInMethodsForEmail(userEmail).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+            @Override
+            public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+                boolean isNewUser = task.getResult().getSignInMethods().isEmpty();
+                if (isNewUser) {
+                    showRegisterDialog();
+                } else {
+                    signInWithEmailAndPassword(userEmail, userPassword);
+                }
+            }
+        });
+    }
+
+    private void showRegisterDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Email belum terdaftar. Apakah Anda ingin mendaftar?")
+                .setCancelable(false)
+                .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+                    }
+                })
+                .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void signInWithEmailAndPassword(String userEmail, String userPassword) {
         auth.signInWithEmailAndPassword(userEmail, userPassword)
                 .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -83,8 +118,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void signup(View view) {
-        startActivity(new Intent(LoginActivity.this,SignUpActivity.class));
+        startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
     }
+
     public void togglePasswordVisibility(View view) {
         EditText passwordEditText = findViewById(R.id.textPassword);
 
@@ -109,6 +145,4 @@ public class LoginActivity extends AppCompatActivity {
             passwordEditText.setSelection(passwordEditText.getText().length());
         }
     }
-
-
 }
