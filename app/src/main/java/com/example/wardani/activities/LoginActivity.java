@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.SignInMethodQueryResult;
 
 public class LoginActivity extends AppCompatActivity {
@@ -34,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
+        // Periksa apakah pengguna sudah masuk sebelumnya
         if (auth.getCurrentUser() != null) {
             String currentUserEmail = auth.getCurrentUser().getEmail();
             if (ADMIN_EMAIL.equals(currentUserEmail)) {
@@ -49,8 +51,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(View view) {
-        String userEmail = email.getText().toString();
-        String userPassword = password.getText().toString();
+        String userEmail = email.getText().toString().trim();
+        String userPassword = password.getText().toString().trim();
 
         if (TextUtils.isEmpty(userEmail)) {
             Toast.makeText(this, "Masukkan username anda!", Toast.LENGTH_SHORT).show();
@@ -65,17 +67,49 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        auth.fetchSignInMethodsForEmail(userEmail).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
-            @Override
-            public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
-                boolean isNewUser = task.getResult().getSignInMethods().isEmpty();
-                if (isNewUser) {
-                    showRegisterDialog();
-                } else {
-                    signInWithEmailAndPassword(userEmail, userPassword);
-                }
-            }
-        });
+        // Lakukan proses masuk
+        signInWithEmailAndPassword(userEmail, userPassword);
+    }
+
+    private void signInWithEmailAndPassword(String userEmail, String userPassword) {
+        auth.signInWithEmailAndPassword(userEmail, userPassword)
+                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(LoginActivity.this, "Berhasil Masuk", Toast.LENGTH_SHORT).show();
+                            String currentUserEmail = auth.getCurrentUser().getEmail();
+                            if (ADMIN_EMAIL.equals(currentUserEmail)) {
+                                startActivity(new Intent(LoginActivity.this, AdminActivity.class));
+                            } else {
+                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            }
+                            finish();
+                        } else {
+                            // Gagal masuk, tampilkan pesan kesalahan
+                            String errorCode = ((FirebaseAuthException) task.getException()).getErrorCode();
+                            handleLoginError(errorCode);
+                        }
+                    }
+                });
+    }
+
+    private void handleLoginError(String errorCode) {
+        switch (errorCode) {
+            case "ERROR_INVALID_EMAIL":
+                Toast.makeText(LoginActivity.this, "Email tidak valid.", Toast.LENGTH_SHORT).show();
+                break;
+            case "ERROR_WRONG_PASSWORD":
+                Toast.makeText(LoginActivity.this, "Password salah.", Toast.LENGTH_SHORT).show();
+                break;
+            case "ERROR_USER_NOT_FOUND":
+                // Jika user tidak ditemukan, tampilkan dialog untuk mendaftar
+                showRegisterDialog();
+                break;
+            default:
+                Toast.makeText(LoginActivity.this, "Gagal Masuk. Periksa kembali Email dan Password Anda.", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     private void showRegisterDialog() {
@@ -94,27 +128,6 @@ public class LoginActivity extends AppCompatActivity {
                 });
         AlertDialog alert = builder.create();
         alert.show();
-    }
-
-    private void signInWithEmailAndPassword(String userEmail, String userPassword) {
-        auth.signInWithEmailAndPassword(userEmail, userPassword)
-                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(LoginActivity.this, "Berhasil Masuk", Toast.LENGTH_SHORT).show();
-                            String currentUserEmail = auth.getCurrentUser().getEmail();
-                            if (ADMIN_EMAIL.equals(currentUserEmail)) {
-                                startActivity(new Intent(LoginActivity.this, AdminActivity.class));
-                            } else {
-                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            }
-                            finish();
-                        } else {
-                            Toast.makeText(LoginActivity.this, "Gagal Masuk, Periksa Kembali Email dan Password Anda! ", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
     }
 
     public void signup(View view) {
