@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.InputType;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
@@ -58,6 +60,19 @@ public class SignUpActivity extends AppCompatActivity {
         addTextWatcher(jalan);
         addTextWatcher(kota);
         addTextWatcher(provinsi);
+
+        InputFilter[] filters = new InputFilter[]{new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                for (int i = start; i < end; i++) {
+                    if (!Character.isLetter(source.charAt(i))) {
+                        return "";
+                    }
+                }
+                return null;
+            }
+        }};
+        nama.setFilters(filters);
     }
 
     private void addTextWatcher(EditText editText) {
