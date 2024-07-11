@@ -46,7 +46,6 @@ public class KelolaCustomerAdapter extends RecyclerView.Adapter<KelolaCustomerAd
         holder.alamatTextView.setText(alamatLengkap);
         holder.teleponTextView.setText(customer.getTelepon());
 
-        // Tambahkan listener onClick untuk tombol "Chat"
         holder.btnChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,7 +63,6 @@ public class KelolaCustomerAdapter extends RecyclerView.Adapter<KelolaCustomerAd
         builder.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                // Panggil metode untuk membuka tautan WhatsApp dengan nomor telepon yang sesuai
                 openWhatsApp(phoneNumber);
             }
         });
@@ -79,10 +77,8 @@ public class KelolaCustomerAdapter extends RecyclerView.Adapter<KelolaCustomerAd
             phoneNumber = "62" + phoneNumber.substring(1);
         }
 
-        // Konstruksi tautan WhatsApp dengan nomor telepon
         String url = "https://wa.me/" + phoneNumber;
 
-        // Buka tautan WhatsApp
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
         context.startActivity(intent);

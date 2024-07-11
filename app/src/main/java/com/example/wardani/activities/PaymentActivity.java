@@ -63,7 +63,6 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
 
         iniBindViews();
 
-        // Tangkap data yang diteruskan dari intent
         Intent intent = getIntent();
         if (intent != null) {
             String id = intent.getStringExtra("ID_ITEM");
@@ -88,7 +87,6 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
             NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("id", "ID"));
             String formattedPrice = currencyFormat.format(price);
 
-            // Set data ke TextView
             textViewNama.setText(nama);
             textViewCustomer.setText(pemesan);
             textViewTanggal.setText(tanggal);
@@ -104,7 +102,6 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
     }
 
     private void iniBindViews() {
-        // Inisialisasi TextView untuk menampilkan data
         textViewNama = findViewById(R.id.payment_nama);
         textViewCustomer = findViewById(R.id.payment_customer);
         textViewTanggal = findViewById(R.id.payment_tanggal);
@@ -207,9 +204,8 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
     }
 
     private void simpanKeRiwayat(String customer, String nama, String tanggal, String waktu, String detail, String harga, String order) {
-        String tglOrder = textViewOrder.getText().toString(); // Mendapatkan tgl_order dari TextView
+        String tglOrder = textViewOrder.getText().toString();
         if (!tglOrder.isEmpty()) {
-            // Membuat data pesanan
             Map<String, Object> pesanan = new HashMap<>();
             pesanan.put("customer", customer);
             pesanan.put("nama", nama);
@@ -218,17 +214,15 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
             pesanan.put("detail", detail);
             pesanan.put("harga", harga);
             pesanan.put("order", order);
-            pesanan.put("tgl_order", tglOrder); // Menambahkan tgl_order ke dalam Map
+            pesanan.put("tgl_order", tglOrder);
             pesanan.put("status", "Belum Selesai");
 
             // Menyimpan data pesanan ke koleksi "Riwayat" di Firestore
             firestore.collection("Riwayat")
                     .add(pesanan)
                     .addOnSuccessListener(documentReference -> {
-//                        Toast.makeText(PaymentActivity.this, "Pesanan berhasil disimpan dalam riwayat", Toast.LENGTH_SHORT).show();
                     })
                     .addOnFailureListener(e -> {
-//                        Toast.makeText(PaymentActivity.this, "Gagal menyimpan pesanan dalam riwayat", Toast.LENGTH_SHORT).show();
                     });
         }
     }
@@ -250,10 +244,9 @@ public class PaymentActivity extends AppCompatActivity implements TransactionFin
     }
 
     private void setResultAndFinish(String updatedStatus) {
-        // Mengirim status pembayaran yang diperbarui kembali ke HistoryActivity
         Intent resultIntent = new Intent();
         resultIntent.putExtra("UPDATED_STATUS", updatedStatus);
         setResult(RESULT_OK, resultIntent);
-        finish(); // Menutup PaymentActivity dan kembali ke HistoryActivity
+        finish();
     }
 }

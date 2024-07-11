@@ -51,11 +51,9 @@ public class SignUpActivity extends AppCompatActivity {
         telepon = findViewById(R.id.textTelp);
         checkboxConfirmation = findViewById(R.id.checkboxConfirmation);
 
-        // Set EditText pos and telepon to accept only numbers
         pos.setInputType(InputType.TYPE_CLASS_NUMBER);
         telepon.setInputType(InputType.TYPE_CLASS_NUMBER);
 
-        // Add TextWatcher for capitalization
         addTextWatcher(nama);
         addTextWatcher(jalan);
         addTextWatcher(kota);
@@ -194,10 +192,8 @@ public class SignUpActivity extends AppCompatActivity {
                             userData.put("kodepos", userPos);
                             userData.put("telepon", userTelepon);
 
-                            // Dapatkan ID pengguna yang baru dibuat dari auth.getCurrentUser().getUid()
                             String userID = auth.getCurrentUser().getUid();
 
-                            // Simpan data pengguna ke Firestore
                             FirebaseFirestore.getInstance().collection("Pengguna")
                                     .document(userID)
                                     .set(userData)
@@ -227,24 +223,19 @@ public class SignUpActivity extends AppCompatActivity {
     public void togglePasswordVisibility(View view) {
         EditText passwordEditText = findViewById(R.id.textPassword);
 
-        // Periksa apakah klik terjadi pada ikon mata
         if (view.getTag() != null && view.getTag().equals("password_toggle")) {
             boolean isPasswordVisible = passwordEditText.getInputType() ==
                     (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
-            // Mengubah ikon mata terbuka atau mata tertutup
             int drawableResId = isPasswordVisible ? R.drawable.hide_password24 : R.drawable.unhide_password24;
             passwordEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, drawableResId, 0);
 
-            // Mengubah tipe input EditText berdasarkan keadaan
             passwordEditText.setInputType(
                     isPasswordVisible ?
                             (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD) :
                             (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD)
             );
             passwordEditText.setTypeface(Typeface.DEFAULT);
-
-            // Memindahkan kursor ke akhir teks
             passwordEditText.setSelection(passwordEditText.getText().length());
         }
     }

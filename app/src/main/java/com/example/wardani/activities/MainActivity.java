@@ -47,9 +47,7 @@ public class MainActivity extends AppCompatActivity {
         ImageButton btnSearch = findViewById(R.id.btn_artist);
         ImageButton btnProfile = findViewById(R.id.btn_profile);
 
-        // Memeriksa apakah activity saat ini adalah MainActivity
         if (getClass().getSimpleName().equals("MainActivity")) {
-            // Jika ya, maka atur latar belakang tombol "Home" menjadi putih
             btnHome.setBackgroundResource(R.drawable.white_rounded_corner);
         }
 
@@ -57,9 +55,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!isHomeClicked) {
-                    // Jika tombol "Home" belum diklik sebelumnya, tandai bahwa tombol "Home" telah diklik
                     isHomeClicked = true;
-                    // Tampilkan pesan toast "Anda sudah di Halaman Beranda"
                     Toast.makeText(MainActivity.this, "Anda sudah di Halaman Beranda", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -100,17 +96,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
-
-        // Mendapatkan objek pengguna saat ini
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        // Mendapatkan item menu_admin
         MenuItem logoutMenuItem = menu.findItem(R.id.menu_logout);
         MenuItem adminMenuItem = menu.findItem(R.id.menu_admin);
         MenuItem addedMenuItem = menu.findItem(R.id.menu_added);
 
-        // Jika pengguna saat ini tidak null dan alamat emailnya adalah "adminwardani123@gmail.com"
-        // maka tampilkan opsi menu_admin, jika tidak, sembunyikan opsi tersebut
+        // Cek akun admin
         if (currentUser != null && currentUser.getEmail().equals("adminwardani123@gmail.com")) {
             adminMenuItem.setVisible(true);
             logoutMenuItem.setVisible(true);

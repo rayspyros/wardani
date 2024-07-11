@@ -67,7 +67,6 @@ public class KelolaPesananActivity extends AppCompatActivity {
             }
         });
 
-        // Tambahkan TextWatcher ke EditText untuk melakukan pencarian saat teks berubah
         searchPesananEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
@@ -87,24 +86,23 @@ public class KelolaPesananActivity extends AppCompatActivity {
         db.collection("Riwayat")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    pesananList.clear(); // Hapus daftar sebelum menambahkan data baru
+                    pesananList.clear();
                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                        // Ambil data tgl_order secara eksplisit dari documentSnapshot
+
                         String tglOrder = documentSnapshot.getString("tgl_order");
-                        String id = documentSnapshot.getId(); // Ambil ID dari dokumen
+                        String id = documentSnapshot.getId();
                         KelolaPesananModel model = documentSnapshot.toObject(KelolaPesananModel.class);
-                        model.setTglOrder(tglOrder); // Atur tglOrder ke dalam objek model
-                        model.setId(id); // Atur ID ke dalam objek model
+                        model.setTglOrder(tglOrder);
+                        model.setId(id);
                         pesananList.add(model);
                     }
-                    adapter.notifyDataSetChanged(); // Tambahkan ini untuk memperbarui tampilan
-                    stopRefreshing(); // Berhenti menyegarkan ketika data dimuat
-                    // Menyaring dan menampilkan daftar saat pertama kali dibuka
+                    adapter.notifyDataSetChanged();
+                    stopRefreshing();
                     filter("");
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(KelolaPesananActivity.this, "Gagal memuat data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    stopRefreshing(); // Berhenti menyegarkan jika ada kegagalan
+                    stopRefreshing();
                 });
     }
 
@@ -114,14 +112,11 @@ public class KelolaPesananActivity extends AppCompatActivity {
         }
     }
 
-    // Method untuk melakukan filter berdasarkan input pengguna
     private void filter(String text) {
         List<KelolaPesananModel> filteredPesananList = new ArrayList<>();
         if (text.isEmpty()) {
-            // Jika teks pencarian kosong, tampilkan semua item
             filteredPesananList.addAll(pesananList);
         } else {
-            // Jika tidak, filter daftar berdasarkan teks yang dimasukkan
             for (KelolaPesananModel item : pesananList) {
                 if (item.getNama().toLowerCase().contains(text.toLowerCase()) ||
                         item.getStatus().toLowerCase().contains(text.toLowerCase()) ||
@@ -130,7 +125,6 @@ public class KelolaPesananActivity extends AppCompatActivity {
                 }
             }
         }
-        // Setelah memfilter, perbarui daftar yang ditampilkan di RecyclerView
         adapter.filterList(filteredPesananList);
     }
 }

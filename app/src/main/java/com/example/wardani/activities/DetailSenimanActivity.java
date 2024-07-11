@@ -86,7 +86,6 @@ public class DetailSenimanActivity extends AppCompatActivity {
         tambahSimpan = findViewById(R.id.tambah_seniman);
         pesanSekarang = findViewById(R.id.pesan_sekarang);
 
-        // Format angka menjadi "1.000.000"
         NumberFormat formatter = NumberFormat.getInstance(new Locale("id", "ID"));
 
         //Seniman
@@ -99,7 +98,6 @@ public class DetailSenimanActivity extends AppCompatActivity {
             totalHarga = senimanModel.getHarga_jasa();
         }
 
-        //Show All
         if (showAllModel != null) {
             Glide.with(getApplicationContext()).load(showAllModel.getImg_url()).into(sImage);
             nama.setText(showAllModel.getNama_dalang());
@@ -112,7 +110,6 @@ public class DetailSenimanActivity extends AppCompatActivity {
         bookingWa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                String url = "https://wa.link/ajqazg";
                 String url = "https://wa.link/i5a6oa";
                 Intent bukaWeb = new Intent(Intent.ACTION_VIEW);
                 bukaWeb.setData(Uri.parse(url));

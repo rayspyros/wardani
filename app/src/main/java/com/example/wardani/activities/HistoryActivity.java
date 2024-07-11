@@ -56,9 +56,7 @@
             ImageButton btnProfile = findViewById(R.id.btn_profile);
             ImageButton btnHistory = findViewById(R.id.btn_history);
 
-            // Memeriksa apakah activity saat ini adalah HistoryActivity
             if (getClass().getSimpleName().equals("HistoryActivity")) {
-                // Jika ya, maka atur latar belakang tombol "History" menjadi putih
                 btnHistory.setBackgroundResource(R.drawable.white_rounded_corner);
             }
 
@@ -105,7 +103,6 @@
             historyAdapter = new HistoryAdapter(this, historyModelList);
             recyclerView.setAdapter(historyAdapter);
 
-            // Setup SwipeRefreshLayout
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
@@ -113,8 +110,6 @@
                     refreshData();
                 }
             });
-
-            // Memuat data untuk pertama kali
             loadData();
         }
         private void loadData() {

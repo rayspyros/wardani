@@ -62,7 +62,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         holder.harga.setText("Rp." + historyModel.getHargaSeniman());
         holder.status.setText(historyModel.getStatus());
 
-        // Menyesuaikan warna teks sesuai dengan status pembayaran
         if (historyModel.getStatus().equals("Belum Dibayar")) {
             holder.status.setTextColor(context.getResources().getColor(R.color.red)); // Warna merah untuk status "Belum Dibayar"
         } else if (historyModel.getStatus().equals("Sudah Dibayar")) {

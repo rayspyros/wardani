@@ -105,7 +105,6 @@ public class KelolaBeritaActivity extends AppCompatActivity {
 
         getDataFromFirestore();
 
-        // Tambahkan TextWatcher ke EditText untuk melakukan pencarian saat teks berubah
         searchBeritaEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
@@ -119,7 +118,6 @@ public class KelolaBeritaActivity extends AppCompatActivity {
             }
         });
 
-        // Menampilkan recyclerViewCustomer saat Activity pertama kali dibuka
         recyclerView.setVisibility(View.VISIBLE);
     }
 
@@ -208,8 +206,6 @@ public class KelolaBeritaActivity extends AppCompatActivity {
         builder.show();
     }
 
-
-    // Method untuk mengunggah gambar ke Firebase Storage
     private void uploadImageToFirebaseStorage(Uri imageUri, String judul, String waktu, String deskripsi, AlertDialog dialog) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("images/" + System.currentTimeMillis() + ".jpg");
 
@@ -286,8 +282,6 @@ public class KelolaBeritaActivity extends AppCompatActivity {
                 });
     }
 
-
-    // Method untuk onActivityResult untuk memproses gambar yang dipilih dari galeri
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -301,22 +295,17 @@ public class KelolaBeritaActivity extends AppCompatActivity {
             }
         }
     }
-
-    // Method untuk melakukan filter berdasarkan input pengguna
     private void filter(String text) {
         List<KelolaBeritaModel> filteredBeritaList = new ArrayList<>();
         if (text.isEmpty()) {
-            // Jika teks pencarian kosong, tampilkan semua item
             filteredBeritaList.addAll(kelolaBeritaModelList);
         } else {
-            // Jika tidak, filter daftar berdasarkan teks yang dimasukkan
             for (KelolaBeritaModel item : kelolaBeritaModelList) {
                 if (item.getJudul().toLowerCase().contains(text.toLowerCase())) {
                     filteredBeritaList.add(item);
                 }
             }
         }
-        // Setelah memfilter, perbarui daftar yang ditampilkan di RecyclerView
         KelolaBeritaAdapter.filterList(filteredBeritaList);
     }
 }

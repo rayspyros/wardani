@@ -40,12 +40,10 @@ public class SenimanAdapter extends RecyclerView.Adapter<SenimanAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         SenimanModel seniman = list.get(position);
 
-        // Tampilkan hanya jika status switch true
         if (seniman.getTampilkan()) {
             Glide.with(context).load(seniman.getImg_url()).into(holder.newImg);
             holder.newNama.setText(seniman.getNama_dalang());
 
-            // Format angka menjadi "1.000.000"
             NumberFormat formatter = NumberFormat.getInstance(new Locale("id", "ID"));
             String formattedHarga = formatter.format(seniman.getHarga_jasa());
             holder.newHarga.setText(formattedHarga);
@@ -59,7 +57,6 @@ public class SenimanAdapter extends RecyclerView.Adapter<SenimanAdapter.ViewHold
                 }
             });
         } else {
-            // Sembunyikan item jika status switch false
             holder.itemView.setVisibility(View.GONE);
             holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
         }

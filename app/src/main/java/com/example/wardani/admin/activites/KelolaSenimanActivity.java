@@ -104,7 +104,6 @@ public class KelolaSenimanActivity extends AppCompatActivity {
 
         getDataFromFirestore();
 
-        // Tambahkan TextWatcher ke EditText untuk melakukan pencarian saat teks berubah
         searchSenimanEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
@@ -117,20 +116,17 @@ public class KelolaSenimanActivity extends AppCompatActivity {
                 filter(editable.toString());
             }
         });
-
-        // Menampilkan recyclerViewCustomer saat Activity pertama kali dibuka
         recyclerView.setVisibility(View.VISIBLE);
     }
 
     private void tampilkanDialogTambahSeniman() {
-        // Inisialisasi view dan field dari dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.popup_tambah_seniman, null);
 
         final EditText ppNamaSeniman = view.findViewById(R.id.pp_nama_dalang);
         final EditText ppHargaSeniman = view.findViewById(R.id.pp_harga_jasa);
         final EditText ppDeskripsi = view.findViewById(R.id.pp_deskripsi);
-        imageView = view.findViewById(R.id.iv_gambar); // Inisialisasi imageView di sini
+        imageView = view.findViewById(R.id.iv_gambar);
         Button btnPilihFoto = view.findViewById(R.id.btn_pilih_foto);
 
         btnPilihFoto.setOnClickListener(new View.OnClickListener() {
@@ -148,17 +144,12 @@ public class KelolaSenimanActivity extends AppCompatActivity {
         btnTambah.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Ambil nilai dari setiap field
                 String nama_dalang = ppNamaSeniman.getText().toString();
                 String harga_jasa_str = ppHargaSeniman.getText().toString();
                 String deskripsi = ppDeskripsi.getText().toString();
-
-                // Periksa apakah semua field telah diisi
                 if (TextUtils.isEmpty(nama_dalang) || TextUtils.isEmpty(harga_jasa_str) || TextUtils.isEmpty(deskripsi) || imageUri == null) {
-                    // Tampilkan pesan kesalahan jika ada field yang kosong atau gambar belum dipilih
                     Toast.makeText(KelolaSenimanActivity.this, "Semua data harus diisi", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Jika semua field terisi, tampilkan dialog konfirmasi
                     int harga_jasa = Integer.parseInt(harga_jasa_str);
                     tampilkanKonfirmasiTambahData(nama_dalang, harga_jasa, deskripsi, imageUri, dialog);
                 }
@@ -186,14 +177,12 @@ public class KelolaSenimanActivity extends AppCompatActivity {
         builder.setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                dialog.dismiss(); // Menutup dialog jika pengguna memilih "Tidak"
+                dialog.dismiss();
             }
         });
         builder.show();
     }
 
-
-    // Method untuk mengunggah gambar ke Firebase Storage
     private void uploadImageToFirebaseStorage(Uri imageUri, String nama_dalang, int harga_jasa, String deskripsi, AlertDialog dialog) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("images/" + System.currentTimeMillis() + ".jpg");
 
@@ -205,7 +194,6 @@ public class KelolaSenimanActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Uri uri) {
                                 String img_url = uri.toString();
-                                // Memanggil method untuk menambahkan data ke Firestore
                                 tambahkanDataKeFirestore(nama_dalang, harga_jasa, deskripsi, img_url, dialog);
                             }
                         });
@@ -219,7 +207,6 @@ public class KelolaSenimanActivity extends AppCompatActivity {
                 });
     }
 
-    // Method untuk menambahkan data ke Firestore
     private void tambahkanDataKeFirestore(String nama_dalang, int harga_jasa, String deskripsi, String img_url, AlertDialog dialog) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> data = new HashMap<>();
@@ -260,7 +247,6 @@ public class KelolaSenimanActivity extends AppCompatActivity {
                                 kelolaSenimanModelList.add(kelolaSenimanModel);
                             }
                             kelolaSenimanAdapter.notifyDataSetChanged();
-                            // Menyaring dan menampilkan daftar saat pertama kali dibuka
                             filter("");
                         } else {
                             Log.d("Firestore", "Error getting documents: ", task.getException());
@@ -269,8 +255,6 @@ public class KelolaSenimanActivity extends AppCompatActivity {
                 });
     }
 
-
-    // Method untuk onActivityResult untuk memproses gambar yang dipilih dari galeri
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -285,21 +269,17 @@ public class KelolaSenimanActivity extends AppCompatActivity {
         }
     }
 
-    // Method untuk melakukan filter berdasarkan input pengguna
     private void filter(String text) {
         List<KelolaSenimanModel> filteredSenimanList = new ArrayList<>();
         if (text.isEmpty()) {
-            // Jika teks pencarian kosong, tampilkan semua item
             filteredSenimanList.addAll(kelolaSenimanModelList);
         } else {
-            // Jika tidak, filter daftar berdasarkan teks yang dimasukkan
             for (KelolaSenimanModel item : kelolaSenimanModelList) {
                 if (item.getNama_dalang().toLowerCase().contains(text.toLowerCase())) {
                     filteredSenimanList.add(item);
                 }
             }
         }
-        // Setelah memfilter, perbarui daftar yang ditampilkan di RecyclerView
         kelolaSenimanAdapter.filterList(filteredSenimanList);
     }
 }

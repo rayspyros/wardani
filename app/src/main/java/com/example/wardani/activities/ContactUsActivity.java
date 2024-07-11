@@ -45,40 +45,31 @@ public class ContactUsActivity extends AppCompatActivity {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        // Periksa apakah pengguna yang saat ini masuk adalah admin
+        // Cek akun admin
         if (currentUser != null && currentUser.getEmail().equals("adminwardani123@gmail.com")) {
-            // Jika ya, maka atur visibilitas tombol edit menjadi terlihat
             editButton.setVisibility(View.VISIBLE);
         } else {
-            // Jika tidak, maka atur visibilitas tombol edit menjadi tidak terlihat
             editButton.setVisibility(View.GONE);
         }
 
 
-        // Mengambil data alamat dari Firestore
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("ContactUs").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {
-                    // Mendapatkan ID dokumen yang sesuai dengan alamat
                     String documentId = document.getId();
                     ContactUsModel contactUsModel = document.toObject(ContactUsModel.class);
-                    // Mendapatkan alamat dari ContactUsModel
                     String alamat = contactUsModel.getAlamat();
-                    // Atur teks alamatKontak TextView
                     TextView alamatTextView = findViewById(R.id.alamatKontak);
                     alamatTextView.setText(alamat);
-                    // Jika tombol edit ditekan, beri tahu showEditAddressDialog() ID dokumen yang sesuai
                     editButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            // Tampilkan pop-up untuk mengedit alamat dengan ID dokumen yang sesuai
                             showEditAddressDialog(documentId);
                         }
                     });
                 }
             } else {
-                // Jika gagal mendapatkan data dari Firestore
                 Toast.makeText(ContactUsActivity.this, "Gagal mengambil data alamat", Toast.LENGTH_SHORT).show();
             }
         });
@@ -90,9 +81,7 @@ public class ContactUsActivity extends AppCompatActivity {
         ImageButton btnProfile = findViewById(R.id.btn_profile);
         ImageButton btnContact = findViewById(R.id.btn_kontakkami);
 
-        // Memeriksa apakah activity saat ini adalah ContactUsActivity
         if (getClass().getSimpleName().equals("ContactUsActivity")) {
-            // Jika ya, maka atur latar belakang tombol "Contact" menjadi putih
             btnContact.setBackgroundResource(R.drawable.white_rounded_corner);
         }
 
@@ -152,28 +141,22 @@ public class ContactUsActivity extends AppCompatActivity {
         });
     }
     private void showEditAddressDialog(String documentId) {
-        // Buat tampilan untuk dialog
         View dialogView = getLayoutInflater().inflate(R.layout.popup_edit_alamat, null);
 
-        // Inisialisasi EditText dan Button di dalam dialog
         EditText editTextAddress = dialogView.findViewById(R.id.pp_alamat);
         Button buttonSave = dialogView.findViewById(R.id.btn_simpan);
 
-        // Buat dialog AlertDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogView);
 
-        // Buat dialog
         AlertDialog alertDialog = builder.create();
 
-        // Ambil alamat dari Firestore menggunakan ID dokumen yang sesuai
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("ContactUs").document(documentId).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         ContactUsModel contactUsModel = documentSnapshot.toObject(ContactUsModel.class);
                         if (contactUsModel != null) {
-                            // Set teks EditText dengan alamat yang diambil dari Firestore
                             editTextAddress.setText(contactUsModel.getAlamat());
                         }
                     } else {
@@ -184,7 +167,6 @@ public class ContactUsActivity extends AppCompatActivity {
                     Toast.makeText(ContactUsActivity.this, "Gagal mengambil alamat: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
 
-        // Ketika tombol Simpan diklik
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -203,8 +185,6 @@ public class ContactUsActivity extends AppCompatActivity {
                         });
             }
         });
-
-        // Tampilkan dialog
         alertDialog.show();
     }
 

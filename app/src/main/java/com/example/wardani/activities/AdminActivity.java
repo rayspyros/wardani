@@ -34,7 +34,6 @@ public class AdminActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.admin_toolbar);
         setSupportActionBar(toolbar);
 
-        // Inisialisasi FirebaseAuth
         auth = FirebaseAuth.getInstance();
 
         LinearLayout kelolaCustomerLayout = findViewById(R.id.kelola_customer);

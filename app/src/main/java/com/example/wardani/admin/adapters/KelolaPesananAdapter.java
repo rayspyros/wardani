@@ -46,7 +46,6 @@ public class KelolaPesananAdapter extends RecyclerView.Adapter<KelolaPesananAdap
     public void onBindViewHolder(@NonNull PesananViewHolder holder, int position) {
         KelolaPesananModel pesanan = filteredPesananList.get(position);
 
-        // Set data to views
         holder.adminKelolaOrder.setText(pesanan.getOrder());
         holder.adminKelolaNama.setText(pesanan.getNama());
         holder.adminKelolaCustomer.setText(pesanan.getCustomer());
@@ -57,18 +56,15 @@ public class KelolaPesananAdapter extends RecyclerView.Adapter<KelolaPesananAdap
         holder.adminKelolaTglOrder.setText(pesanan.getTglOrder());
         holder.adminKelolaStatus.setText(pesanan.getStatus());
 
-        // Set onclick listener for delete button
         holder.btnHapus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Tampilkan dialog konfirmasi sebelum menghapus
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Konfirmasi Hapus");
                 builder.setMessage("Apakah Anda yakin ingin menghapus pesanan ini?");
                 builder.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // Panggil method untuk menghapus data dari Firestore
                         hapusPesanan(pesanan.getId());
                     }
                 });
@@ -79,37 +75,29 @@ public class KelolaPesananAdapter extends RecyclerView.Adapter<KelolaPesananAdap
                         dialog.dismiss();
                     }
                 });
-                // Munculkan dialog
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }
         });
 
-
-        // Set onclick listener for complete button
-        holder.btnSelesai.setVisibility(View.VISIBLE); // Default visibility
+        holder.btnSelesai.setVisibility(View.VISIBLE);
         holder.btnSelesai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Tampilkan dialog konfirmasi sebelum menandai pesanan sebagai selesai
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Konfirmasi Selesai");
                 builder.setMessage("Untuk menandai pesanan sebagai selesai, masukkan kata 'KONFIRMASI' dan klik Kirim.");
 
-                // Tambahkan input field di dalam dialog
                 final EditText input = new EditText(context);
                 builder.setView(input);
 
                 builder.setPositiveButton("Kirim", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // Periksa apakah inputan sesuai dengan kata 'KONFIRMASI'
                         String konfirmasi = input.getText().toString().trim();
                         if (konfirmasi.equalsIgnoreCase("KONFIRMASI")) {
-                            // Panggil method untuk menandai pesanan sebagai selesai di Firestore
                             tandaiSelesai(pesanan.getId());
                         } else {
-                            // Jika input tidak sesuai, tampilkan pesan kesalahan
                             Toast.makeText(context, "Konfirmasi tidak valid", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -118,17 +106,14 @@ public class KelolaPesananAdapter extends RecyclerView.Adapter<KelolaPesananAdap
                 builder.setNegativeButton("Batal", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // Batal menandai pesanan sebagai selesai, tutup dialog
                         dialog.dismiss();
                     }
                 });
 
-                // Munculkan dialog
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }
         });
-        // Hide the "Selesai" button if the order is already completed
         if (pesanan.getStatus().equalsIgnoreCase("Sudah Selesai")) {
             holder.btnSelesai.setVisibility(View.GONE);
         } else {
@@ -136,7 +121,6 @@ public class KelolaPesananAdapter extends RecyclerView.Adapter<KelolaPesananAdap
         }
     }
 
-    // Method untuk menghapus pesanan dari Firestore
     private void hapusPesanan(String id) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("Riwayat").document(id)
@@ -144,7 +128,6 @@ public class KelolaPesananAdapter extends RecyclerView.Adapter<KelolaPesananAdap
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        // Hapus item dari daftar dan refresh tampilan
                         removeItem(id);
                         Toast.makeText(context, "Pesanan berhasil dihapus", Toast.LENGTH_SHORT).show();
                     }
@@ -156,8 +139,6 @@ public class KelolaPesananAdapter extends RecyclerView.Adapter<KelolaPesananAdap
                     }
                 });
     }
-
-    // Method untuk menandai pesanan sebagai selesai di Firestore
     private void tandaiSelesai(String id) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("Riwayat").document(id)
@@ -165,7 +146,6 @@ public class KelolaPesananAdapter extends RecyclerView.Adapter<KelolaPesananAdap
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        // Refresh tampilan
                         notifyDataSetChanged();
                         Toast.makeText(context, "Pesanan berhasil ditandai sebagai selesai", Toast.LENGTH_SHORT).show();
                     }
@@ -178,7 +158,6 @@ public class KelolaPesananAdapter extends RecyclerView.Adapter<KelolaPesananAdap
                 });
     }
 
-    // Method untuk menghapus item dari daftar
     private void removeItem(String id) {
         for (int i = 0; i < filteredPesananList.size(); i++) {
             if (filteredPesananList.get(i).getId().equals(id)) {

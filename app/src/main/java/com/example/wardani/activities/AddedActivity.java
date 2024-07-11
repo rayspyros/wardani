@@ -59,7 +59,6 @@ public class AddedActivity extends AppCompatActivity {
             }
         });
 
-        // Set event listener for each button
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

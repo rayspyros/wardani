@@ -29,21 +29,18 @@ public class AddedAdapter extends RecyclerView.Adapter<AddedAdapter.ViewHolder> 
     Context context;
     List<AddedModel> list;
 
-    // Tambahkan referensi ke FirebaseAuth dan FirebaseFirestore
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
 
-    // Metode untuk mengambil detail seniman dari Firestore berdasarkan nama seniman
     private void getDetailSeniman(String namaSeniman) {
         firestore.collection("Seniman")
-                .whereEqualTo("nama_dalang", namaSeniman)  // Query berdasarkan nama seniman
+                .whereEqualTo("nama_dalang", namaSeniman)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
-                        DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);  // Ambil dokumen pertama
+                        DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
                         SenimanModel senimanModel = documentSnapshot.toObject(SenimanModel.class);
                         if (senimanModel != null) {
-                            // Buat intent untuk menampilkan DetailSenimanActivity dengan informasi detail seniman
                             Intent intent = new Intent(context, DetailSenimanActivity.class);
                             intent.putExtra("detail", senimanModel);
                             context.startActivity(intent);
@@ -60,7 +57,6 @@ public class AddedAdapter extends RecyclerView.Adapter<AddedAdapter.ViewHolder> 
         this.context = context;
         this.list = list;
 
-        // Inisialisasi FirebaseAuth dan FirebaseFirestore
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
     }
@@ -80,29 +76,21 @@ public class AddedAdapter extends RecyclerView.Adapter<AddedAdapter.ViewHolder> 
         holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Tanggapi klik tombol hapus di sini
                 hapusItem(position, addedModel.getDocumentId());
-
-                // Tampilkan toast setelah berhasil dihapus
                 Toast.makeText(context, "Berhasil dihapus!", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Tambahkan logika untuk menangani klik tombol "Lihat"
         holder.lihatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Dapatkan nama seniman dari model
                 String namaSeniman = addedModel.getSenimanNama();
-
-                // Panggil metode untuk mengambil detail seniman berdasarkan nama
                 getDetailSeniman(namaSeniman);
             }
         });
     }
 
     private void hapusItem(int position, String documentId) {
-        // Hapus item dari Firestore dan update RecyclerView
         firestore.collection("Simpan")
                 .document(auth.getCurrentUser().getUid())
                 .collection("User")
@@ -110,7 +98,6 @@ public class AddedAdapter extends RecyclerView.Adapter<AddedAdapter.ViewHolder> 
                 .delete()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // Hapus item dari data dan update RecyclerView
                         list.remove(position);
                         notifyDataSetChanged();
                     } else {

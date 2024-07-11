@@ -65,7 +65,6 @@ public class KelolaSenimanAdapter extends RecyclerView.Adapter<KelolaSenimanAdap
         KelolaSenimanModel item = filteredSenimanList.get(position);
         holder.sNama.setText(item.getNama_dalang());
 
-        // Set status switch berdasarkan nilai dari SharedPreferences
         holder.aSwitch.setChecked(sharedPreferences.getBoolean(item.getId(), true));
 
         holder.btnEdit.setOnClickListener(new View.OnClickListener() {
@@ -75,8 +74,6 @@ public class KelolaSenimanAdapter extends RecyclerView.Adapter<KelolaSenimanAdap
             }
         });
 
-
-        // Set onClickListener untuk tombol delete
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,7 +81,6 @@ public class KelolaSenimanAdapter extends RecyclerView.Adapter<KelolaSenimanAdap
             }
         });
 
-        // Set listener untuk switch
         holder.aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -104,7 +100,6 @@ public class KelolaSenimanAdapter extends RecyclerView.Adapter<KelolaSenimanAdap
         Button btnSave = view.findViewById(R.id.btn_simpan);
         ImageView ivGambar = view.findViewById(R.id.iv2_gambar);
 
-        // Mengambil URL gambar dari Firestore dan menampilkannya menggunakan Glide
         Glide.with(context)
                 .load(item.getImg_url())
                 .into(ivGambar);
@@ -197,7 +192,6 @@ public class KelolaSenimanAdapter extends RecyclerView.Adapter<KelolaSenimanAdap
     }
 
     private void hapusDataDariFirestore(String namaDalang) {
-        // Akses Firestore dan hapus data dengan nama dalang yang sesuai
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("ShowAll")
                 .whereEqualTo("nama_dalang", namaDalang)
@@ -245,7 +239,6 @@ public class KelolaSenimanAdapter extends RecyclerView.Adapter<KelolaSenimanAdap
         builder.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                // Panggil method hapusDataDariFirestore untuk menghapus data dari Firestore
                 hapusDataDariFirestore(item.getNama_dalang());
             }
         });
@@ -260,7 +253,6 @@ public class KelolaSenimanAdapter extends RecyclerView.Adapter<KelolaSenimanAdap
         builder.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                // Simpan status switch ke SharedPreferences dan update di Firestore
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean(item.getId(), isChecked);
                 editor.apply();

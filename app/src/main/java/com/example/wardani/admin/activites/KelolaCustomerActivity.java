@@ -72,7 +72,6 @@ public class KelolaCustomerActivity extends AppCompatActivity {
             }
         });
 
-        // Tambahkan TextWatcher ke EditText untuk melakukan pencarian saat teks berubah
         searchCustomerEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
@@ -86,7 +85,6 @@ public class KelolaCustomerActivity extends AppCompatActivity {
             }
         });
 
-        // Menampilkan recyclerViewCustomer saat Activity pertama kali dibuka
         recyclerViewCustomer.setVisibility(View.VISIBLE);
     }
 
@@ -97,22 +95,19 @@ public class KelolaCustomerActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        kelolaCustomerModelList.clear(); // Bersihkan daftar sebelum menambahkan data baru
+                        kelolaCustomerModelList.clear();
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                            // Konversi dokumen Firestore menjadi objek model
                             KelolaCustomerModel customer = documentSnapshot.toObject(KelolaCustomerModel.class);
                             kelolaCustomerModelList.add(customer);
                         }
-                        // Mengurutkan daftar berdasarkan nama
                         Collections.sort(kelolaCustomerModelList, new Comparator<KelolaCustomerModel>() {
                             @Override
                             public int compare(KelolaCustomerModel customer1, KelolaCustomerModel customer2) {
                                 return customer1.getNama().compareToIgnoreCase(customer2.getNama());
                             }
                         });
-                        adapter.notifyDataSetChanged(); // Memperbarui RecyclerView setelah data dimuat
-                        stopRefreshing(); // Hentikan refreshing setelah data dimuat
-                        // Menyaring dan menampilkan daftar saat pertama kali dibuka
+                        adapter.notifyDataSetChanged();
+                        stopRefreshing();
                         filter("");
                     }
                 })
@@ -131,21 +126,17 @@ public class KelolaCustomerActivity extends AppCompatActivity {
         }
     }
 
-    // Method untuk melakukan filter berdasarkan input pengguna
     private void filter(String text) {
         List<KelolaCustomerModel> filteredCustomerList = new ArrayList<>();
         if (text.isEmpty()) {
-            // Jika teks pencarian kosong, tampilkan semua item
             filteredCustomerList.addAll(kelolaCustomerModelList);
         } else {
-            // Jika tidak, filter daftar berdasarkan teks yang dimasukkan
             for (KelolaCustomerModel item : kelolaCustomerModelList) {
                 if (item.getNama().toLowerCase().contains(text.toLowerCase())) {
                     filteredCustomerList.add(item);
                 }
             }
         }
-        // Setelah memfilter, perbarui daftar yang ditampilkan di RecyclerView
         adapter.filterList(filteredCustomerList);
     }
 }

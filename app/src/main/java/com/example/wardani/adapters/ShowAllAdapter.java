@@ -44,7 +44,6 @@ public class ShowAllAdapter extends RecyclerView.Adapter<ShowAllAdapter.ViewHold
         ShowAllModel item = filteredList.get(position);
         Glide.with(context).load(item.getImg_url()).into(holder.sItemImage);
 
-        // Menggunakan NumberFormat untuk mengubah harga menjadi format IDR dengan pemisah ribuan
         NumberFormat numberFormat = NumberFormat.getInstance(new Locale("id", "ID"));
         String formattedHarga = numberFormat.format(item.getHarga_jasa());
 

@@ -41,7 +41,6 @@ public class ShowAllActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_all);
 
-        // Inisialisasi elemen UI dan Firebase
         toolbar = findViewById(R.id.detail_showall_toolbar);
 
         ImageButton btnHome = findViewById(R.id.btn_home);
@@ -50,9 +49,7 @@ public class ShowAllActivity extends AppCompatActivity {
         ImageButton btnHistory = findViewById(R.id.btn_history);
         ImageButton btnSearch = findViewById(R.id.btn_artist);
 
-        // Memeriksa apakah activity saat ini adalah ShowAllActivity
         if (getClass().getSimpleName().equals("ShowAllActivity")) {
-            // Jika ya, maka atur latar belakang tombol "Home" menjadi putih
             btnSearch.setBackgroundResource(R.drawable.white_rounded_corner);
         }
 
@@ -94,12 +91,10 @@ public class ShowAllActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.show_all_rec);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
 
-        // Inisialisasi daftar dan adapter
         showAllModelList = new ArrayList<>();
         showAllAdapter = new ShowAllAdapter(this, showAllModelList);
         recyclerView.setAdapter(showAllAdapter);
 
-        // Mendapatkan data dari Firestore dan menambahkannya ke daftar
         firestore.collection("ShowAll")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -116,45 +111,35 @@ public class ShowAllActivity extends AppCompatActivity {
                     }
                 });
 
-        // Mengatur TextWatcher untuk EditText pencarian
         EditText searchEditText = findViewById(R.id.search_seniman);
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // Tidak perlu diimplementasikan
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // Tidak perlu diimplementasikan
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                // Memfilter daftar berdasarkan teks yang dimasukkan oleh pengguna
                 filter(editable.toString());
             }
         });
     }
 
-    // Metode untuk menyaring daftar berdasarkan teks pencarian
     private void filter(String text) {
         List<ShowAllModel> filteredList = new ArrayList<>();
         if (text.isEmpty()) {
-            // Jika teks pencarian kosong, tampilkan semua item
             filteredList.addAll(showAllModelList);
         } else {
-            // Jika tidak, filter daftar berdasarkan teks yang dimasukkan
             for (ShowAllModel item : showAllModelList) {
                 if (item.getNama_dalang().toLowerCase().contains(text.toLowerCase())) {
                     filteredList.add(item);
                 }
             }
         }
-        // Setelah memfilter, perbarui daftar yang ditampilkan di RecyclerView
         showAllAdapter.filterList(filteredList);
-
-        // Menampilkan RecyclerView jika hasil pencarian ditemukan
         if (filteredList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
         } else {

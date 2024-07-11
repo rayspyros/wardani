@@ -37,7 +37,6 @@ public class DetailBeritaActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Justify text if API level is 26 or higher
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             TextView detailDeskripsi = findViewById(R.id.detail_bDeskripsi);
             detailDeskripsi.setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD);
@@ -58,14 +57,11 @@ public class DetailBeritaActivity extends AppCompatActivity {
             beritaModel = (BeritaModel) obj;
         }
 
-        //Berita
         bImage = findViewById(R.id.detail_bImg);
         judul = findViewById(R.id.detail_bJudul);
         deskripsi = findViewById(R.id.detail_bDeskripsi);
         waktu = findViewById(R.id.detail_bWaktu);
 
-
-        //Berita
         if (beritaModel != null){
             Glide.with(getApplicationContext()).load(beritaModel.getImg_url()).into(bImage);
             judul.setText(beritaModel.getJudul());

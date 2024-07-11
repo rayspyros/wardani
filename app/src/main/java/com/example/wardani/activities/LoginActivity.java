@@ -35,7 +35,6 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-        // Periksa apakah pengguna sudah masuk sebelumnya
         if (auth.getCurrentUser() != null) {
             String currentUserEmail = auth.getCurrentUser().getEmail();
             if (ADMIN_EMAIL.equals(currentUserEmail)) {
@@ -103,7 +102,6 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Password salah.", Toast.LENGTH_SHORT).show();
                 break;
             case "ERROR_USER_NOT_FOUND":
-                // Jika user tidak ditemukan, tampilkan dialog untuk mendaftar
                 showRegisterDialog();
                 break;
             default:
@@ -137,24 +135,19 @@ public class LoginActivity extends AppCompatActivity {
     public void togglePasswordVisibility(View view) {
         EditText passwordEditText = findViewById(R.id.textPassword);
 
-        // Periksa apakah klik terjadi pada ikon mata
         if (view.getTag() != null && view.getTag().equals("password_toggle")) {
             boolean isPasswordVisible = passwordEditText.getInputType() ==
                     (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
-            // Mengubah ikon mata terbuka atau mata tertutup
             int drawableResId = isPasswordVisible ? R.drawable.hide_password24 : R.drawable.unhide_password24;
             passwordEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, drawableResId, 0);
 
-            // Mengubah tipe input EditText berdasarkan keadaan
             passwordEditText.setInputType(
                     isPasswordVisible ?
                             (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD) :
                             (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD)
             );
             passwordEditText.setTypeface(Typeface.DEFAULT);
-
-            // Memindahkan kursor ke akhir teks
             passwordEditText.setSelection(passwordEditText.getText().length());
         }
     }

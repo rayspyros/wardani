@@ -75,8 +75,6 @@ public class KelolaBeritaAdapter extends RecyclerView.Adapter<KelolaBeritaAdapte
             }
         });
 
-
-        // Set onClickListener untuk tombol delete
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,7 +94,6 @@ public class KelolaBeritaAdapter extends RecyclerView.Adapter<KelolaBeritaAdapte
         Button btnSave = view.findViewById(R.id.btn_simpan);
         ImageView ivGambar = view.findViewById(R.id.iv2_gambar);
 
-        // Mengambil URL gambar dari Firestore dan menampilkannya menggunakan Glide
         Glide.with(context)
                 .load(item.getImg_url())
                 .into(ivGambar);
