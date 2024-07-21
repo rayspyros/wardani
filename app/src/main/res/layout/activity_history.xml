@@ -16,11 +16,24 @@
         app:layout_constraintTop_toTopOf="parent"
         app:title="Riwayat Saya" />
 
+    <TextView
+        android:id="@+id/text_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Note: Pesanan yang belum dibayar 1x24 jam akan otomatis terhapus, segera lakukan pembayaran."
+        android:textAlignment="center"
+        android:textColor="@color/colorButton"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/history_toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/history_toolbar"
+        app:layout_constraintTop_toBottomOf="@id/text_note"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">

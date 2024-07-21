@@ -24,6 +24,7 @@ import com.example.wardani.activities.PaymentActivity;
 import com.example.wardani.models.HistoryModel;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -215,6 +216,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     }
 
     private void cancelPesanan(int position, String documentId) {
+        HistoryModel historyModel = historyModelList.get(position);
+        String artistName = historyModel.getNamaSeniman();
+        String orderDate = historyModel.getTanggal();
+
         firestore.collection("Pesanan")
                 .document(auth.getCurrentUser().getUid())
                 .collection("User")
@@ -222,13 +227,42 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                 .delete()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
+                        deleteDateFromTanggalOrder(artistName, orderDate);
+
                         historyModelList.remove(position);
                         notifyDataSetChanged();
+
+                        Toast.makeText(context, "Pemesanan dibatalkan", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(context, "Gagal menghapus data", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
+
+    private void deleteDateFromTanggalOrder(String artistName, String dateToDelete) {
+        firestore.collection("TanggalOrder")
+                .whereEqualTo("namaSeniman", artistName)
+                .whereEqualTo("tanggalOrder", dateToDelete)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (DocumentSnapshot document : task.getResult()) {
+                            firestore.collection("TanggalOrder")
+                                    .document(document.getId())
+                                    .delete()
+                                    .addOnCompleteListener(deleteTask -> {
+                                        if (deleteTask.isSuccessful()) {
+                                        } else {
+                                            Toast.makeText(context, "Gagal menghapus tanggal dari TanggalOrder", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
+                    } else {
+                        Toast.makeText(context, "Gagal menemukan tanggal di TanggalOrder", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
 
     @Override
     public int getItemCount() {

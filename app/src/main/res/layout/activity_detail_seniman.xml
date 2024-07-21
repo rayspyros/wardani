@@ -79,7 +79,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
                         android:text="Note: Mohon maaf, untuk saat ini, pemesanan seniman hanya tersedia di area Jawa Tengah saja. Kami berusaha untuk memperluas cakupan layanan kami di masa mendatang. Terima kasih atas pengertian dan dukungan Anda."
-                        android:textColor="@color/background"
+                        android:textColor="@color/colorButton"
                         android:gravity="start|left"/>
 
                     <TextView

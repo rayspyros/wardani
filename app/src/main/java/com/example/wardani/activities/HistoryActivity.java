@@ -118,14 +118,13 @@
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
-                                historyModelList.clear(); // Bersihkan list sebelum memuat data baru
+                                historyModelList.clear();
                                 for (DocumentSnapshot doc : task.getResult().getDocuments()) {
                                     HistoryModel historyModel = doc.toObject(HistoryModel.class);
                                     historyModel.setDocumentId(doc.getId());
                                     historyModelList.add(historyModel);
                                 }
                                 historyAdapter.notifyDataSetChanged();
-                                // Selesaikan refresh
                                 swipeRefreshLayout.setRefreshing(false);
                             }
                         }
@@ -133,7 +132,6 @@
         }
 
         private void refreshData() {
-            // Panggil kembali loadData untuk memperbarui data
             loadData();
         }
 
@@ -142,12 +140,9 @@
             super.onActivityResult(requestCode, resultCode, data);
             if (requestCode == PAYMENT_REQUEST_CODE) {
                 if (resultCode == RESULT_OK) {
-                    // Mendapatkan status pembayaran yang diperbarui dari Intent
                     String updatedStatus = data.getStringExtra("UPDATED_STATUS");
                     if (updatedStatus != null && updatedStatus.equals("Sudah Dibayar")) {
-                        // Menampilkan pesan bahwa pembayaran berhasil
                         Toast.makeText(this, "Pembayaran berhasil", Toast.LENGTH_SHORT).show();
-                        // Memperbarui status pada historyModelList
                         int position = data.getIntExtra("POSITION", -1);
                         if (position != -1) {
                             historyModelList.get(position).setStatus(updatedStatus);
