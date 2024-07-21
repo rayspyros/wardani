@@ -1,16 +1,10 @@
 package com.example.wardani.activities;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
-import static com.example.wardani.BuildConfig.BASE_URL;
-import static com.example.wardani.BuildConfig.CLIENT_KEY;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -22,10 +16,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 
-import com.example.wardani.BuildConfig;
 import com.example.wardani.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -33,22 +25,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback;
-import com.midtrans.sdk.corekit.core.MidtransSDK;
-import com.midtrans.sdk.corekit.core.PaymentMethod;
-import com.midtrans.sdk.corekit.core.TransactionRequest;
-import com.midtrans.sdk.corekit.core.themes.CustomColorTheme;
-import com.midtrans.sdk.corekit.models.CustomerDetails;
-import com.midtrans.sdk.corekit.models.ItemDetails;
-import com.midtrans.sdk.corekit.models.snap.CreditCard;
-import com.midtrans.sdk.corekit.models.snap.TransactionResult;
-import com.midtrans.sdk.uikit.SdkUIFlowBuilder;
-import com.midtrans.sdk.uikit.api.model.BankType;
-import com.midtrans.sdk.uikit.external.UiKitApi;
 
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -225,15 +203,13 @@ public class OrderActivity extends AppCompatActivity {
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        String selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
-
-                        Calendar selectedCalendar = Calendar.getInstance();
-                        selectedCalendar.set(year, month, dayOfMonth);
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
-                        tanggal.setText(dateFormat.format(selectedCalendar.getTime()));
-
                         if (isDateValid(year, month, dayOfMonth)) {
-                            Toast.makeText(OrderActivity.this, "Tanggal valid", Toast.LENGTH_SHORT).show();
+                            String selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+
+                            Calendar selectedCalendar = Calendar.getInstance();
+                            selectedCalendar.set(year, month, dayOfMonth);
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
+                            tanggal.setText(dateFormat.format(selectedCalendar.getTime()));
                         } else {
                             Toast.makeText(OrderActivity.this, "Pilih tanggal pemesanan H-3!", Toast.LENGTH_SHORT).show();
                             tanggal.setText("");
@@ -244,8 +220,18 @@ public class OrderActivity extends AppCompatActivity {
                 month,
                 day);
 
+        Calendar minDate = Calendar.getInstance();
+        minDate.add(Calendar.DAY_OF_MONTH, 2); // Set minimum date to 2 days from today
+
+        Calendar maxDate = Calendar.getInstance();
+        maxDate.add(Calendar.MONTH, 1); // Set maximum date to 1 month from today
+
+        datePickerDialog.getDatePicker().setMinDate(minDate.getTimeInMillis());
+        datePickerDialog.getDatePicker().setMaxDate(maxDate.getTimeInMillis());
+
         datePickerDialog.show();
     }
+
 
     private boolean isDateValid(int selectedYear, int selectedMonth, int selectedDay) {
         Calendar selectedDate = Calendar.getInstance();

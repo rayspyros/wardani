@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
     private Context context;
@@ -53,6 +54,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         HistoryModel historyModel = historyModelList.get(position);
+
+        if (isOrderExpired(historyModel.getTimeOrder())) {
+            cancelPesanan(position, historyModel.getDocumentId());
+            return;
+        }
 
         holder.customer.setText(historyModel.getNama());
         holder.nama.setText(historyModel.getNamaSeniman());
@@ -146,6 +152,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                 }
             }
         });
+    }
+
+    private boolean isOrderExpired(Timestamp orderTime) {
+        long currentTimeMillis = System.currentTimeMillis();
+        long orderTimeMillis = orderTime.toDate().getTime();
+        long diffInMillis = currentTimeMillis - orderTimeMillis;
+        long diffInHours = TimeUnit.MILLISECONDS.toHours(diffInMillis);
+        return diffInHours >= 24;
     }
 
     private void goToPaymentActivity(String documentId, String nama, String customer, String tanggal, String waktu, String detail, String harga, String order, String status, int position) {

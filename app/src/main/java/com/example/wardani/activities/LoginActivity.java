@@ -151,4 +151,45 @@ public class LoginActivity extends AppCompatActivity {
             passwordEditText.setSelection(passwordEditText.getText().length());
         }
     }
+
+    public void forget(View view) {
+        // Create an EditText for the email input
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+
+        // Create an AlertDialog to get the user's email
+        new AlertDialog.Builder(this)
+                .setTitle("Reset Password")
+                .setMessage("Masukkan email untuk mereset password")
+                .setView(input)
+                .setPositiveButton("Kirim", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String email = input.getText().toString().trim();
+                        if (!email.isEmpty()) {
+                            sendPasswordResetEmail(email);
+                        } else {
+                            input.setError("Email harus diisi");
+                        }
+                    }
+                })
+                .setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Canceled
+                    }
+                }).show();
+    }
+
+    private void sendPasswordResetEmail(String email) {
+        auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(LoginActivity.this, "Email reset password telah dikirim", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Gagal mengirim email reset password", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
 }
