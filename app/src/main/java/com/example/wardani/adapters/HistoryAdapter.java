@@ -56,7 +56,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         HistoryModel historyModel = historyModelList.get(position);
 
-        if (isOrderExpired(historyModel.getTimeOrder())) {
+        String status = historyModel.getStatus();
+        Timestamp orderTime = historyModel.getTimeOrder();
+
+        if (isOrderExpired(orderTime, status)) {
             cancelPesanan(position, historyModel.getDocumentId());
             return;
         }
@@ -155,7 +158,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         });
     }
 
-    private boolean isOrderExpired(Timestamp orderTime) {
+    private boolean isOrderExpired(Timestamp orderTime, String status) {
+        if (!status.equals("Belum Dibayar")) {
+            return false;
+        }
+
         long currentTimeMillis = System.currentTimeMillis();
         long orderTimeMillis = orderTime.toDate().getTime();
         long diffInMillis = currentTimeMillis - orderTimeMillis;
