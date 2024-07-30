@@ -73,15 +73,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         holder.status.setText(historyModel.getStatus());
 
         if (historyModel.getStatus().equals("Belum Dibayar")) {
-            holder.status.setTextColor(context.getResources().getColor(R.color.red)); // Warna merah untuk status "Belum Dibayar"
+            holder.status.setTextColor(context.getResources().getColor(R.color.red));
         } else if (historyModel.getStatus().equals("Sudah Dibayar")) {
-            holder.status.setTextColor(context.getResources().getColor(R.color.green)); // Warna hijau untuk status "Sudah Dibayar"
+            holder.status.setTextColor(context.getResources().getColor(R.color.green));
         }
 
         if (historyModel.getStatus().equals("Sudah Dibayar")) {
-            holder.bayarBtn.setVisibility(View.GONE); // Sembunyikan tombol bayar
+            holder.bayarBtn.setVisibility(View.GONE);
         } else {
-            holder.bayarBtn.setVisibility(View.VISIBLE); // Tampilkan tombol bayar untuk status lainnya
+            holder.bayarBtn.setVisibility(View.VISIBLE);
         }
 
 
